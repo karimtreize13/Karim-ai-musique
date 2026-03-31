@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim AI Musique</title>
+    <title>KARIMTREIZE13 AI - Voice Clone</title>
     <style>
-        :root { --bg-body: #f8f9f0; --primary-blue: #0d6efd; --accent-green: #00d282; --accent-orange: #ffc107; }
-        body { background-color: var(--bg-body); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; border-radius: 12px; width: 95%; max-width: 450px; border: 1px solid #dee2e6; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header-bar { background: var(--primary-blue); height: 8px; }
-        .content { padding: 25px; text-align: center; }
-        .logo { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
-        .logo span { color: var(--accent-orange); }
-        .input-group { background: #f1f3f5; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: right; border: 1px solid #dee2e6; }
-        label { display: block; margin-bottom: 10px; font-weight: bold; font-size: 14px; }
-        input[type="file"], textarea { width: 100%; border-radius: 5px; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; }
-        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--accent-green); color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
-        #status { margin-top: 20px; font-size: 14px; }
-        audio { width: 100%; margin-top: 15px; }
+        :root { --bg: #f8f9f0; --blue: #0d6efd; --green: #00d282; --orange: #ffc107; }
+        body { background-color: var(--bg); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; border-radius: 15px; width: 95%; max-width: 450px; border: 1px solid #dee2e6; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .header { background: var(--blue); height: 10px; }
+        .content { padding: 30px; text-align: center; }
+        .logo { font-size: 26px; font-weight: bold; margin-bottom: 10px; }
+        .logo span { color: var(--orange); }
+        .input-box { background: #f1f3f5; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: right; border: 1px solid #ddd; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; color: #444; }
+        input, textarea { width: 100%; border: 1px solid #ccc; border-radius: 6px; padding: 10px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 16px; border-radius: 10px; border: none; background: var(--green); color: white; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .btn:hover { background: #00b972; }
+        #status { margin-top: 20px; font-size: 15px; min-height: 50px; }
+        audio { width: 100%; margin-top: 15px; border-radius: 30px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header-bar"></div>
+    <div class="header"></div>
     <div class="content">
         <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-        <p style="color: gray; font-size: 13px; margin-bottom: 20px;">النسخة الاحترافية لاستنساخ الأصوات 🎤</p>
-        <div class="input-group">
-            <label>1. ارفع عينة صوتك:</label>
+        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">🎙️ استنساخ الأصوات الاحترافي (سيرفر خاص)</p>
+
+        <div class="input-box">
+            <label>1. ارفع عينة صوتك (MP3/WAV):</label>
             <input type="file" id="audioInput" accept="audio/*">
         </div>
-        <div class="input-group">
-            <label>2. النص المراد نطقُه:</label>
-            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
+
+        <div class="input-box">
+            <label>2. النص الذي سيقوله صوتك:</label>
+            <textarea id="textInput" rows="3" placeholder="اكتب هنا باللغة العربية..."></textarea>
         </div>
+
         <button class="btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
         <div id="status"></div>
     </div>
@@ -42,23 +46,42 @@
 
 <script type="module">
     import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+
     window.generateVoice = async function() {
         const text = document.getElementById('textInput').value;
         const audioFile = document.getElementById('audioInput').files[0];
         const status = document.getElementById('status');
-        if (!text || !audioFile) { alert("يرجى رفع ملف الصوت وكتابة النص!"); return; }
-        status.innerHTML = "<span style='color: blue;'>⏳ جاري المعالجة...</span>";
+
+        if (!text || !audioFile) {
+            alert("يا كريم، يرجى رفع الملف وكتابة النص أولاً!");
+            return;
+        }
+
+        status.innerHTML = "<span style='color: blue; font-weight: bold;'>⏳ جاري الاتصال بسيرفرك الخاص.. انتظر قليلاً</span>";
+
         try {
+            // استخدام التوكن الخاص بك للوصول للسيرفر
             const app = await client("https://mrfakename-f5-tts.hf.space/", {
                 hf_token: "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" 
             });
+            
             const result = await app.predict("/predict", [audioFile, text, "F5-TTS", false]);
-            const audioUrl = result.data[0].url;
-            status.innerHTML = `<p style="color: green;">✅ تم بنجاح!</p><audio controls src="${audioUrl}"></audio>`;
+
+            if (result.data && result.data[0]) {
+                const audioUrl = result.data[0].url;
+                status.innerHTML = `
+                    <p style="color: green; font-weight: bold;">✅ تم التوليد بنجاح!</p>
+                    <audio controls src="${audioUrl}"></audio>
+                    <br><a href="${audioUrl}" download style="color: blue; font-size: 12px; display: block; margin-top: 10px;">تحميل الملف 📥</a>
+                `;
+            }
         } catch (error) {
-            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول، حاول مرة أخرى.</span>";
+            console.error(error);
+            status.innerHTML = "<span style='color: red;'>❌ السيرفر مزدحم جداً الآن. سأحاول مرة أخرى تلقائياً بعد 5 ثوانٍ...</span>";
+            setTimeout(generateVoice, 5000); // محاولة تلقائية
         }
     }
 </script>
+
 </body>
 </html>
