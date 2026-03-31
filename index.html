@@ -33,7 +33,7 @@
     <div class="header-bar"></div>
     <div class="content">
         <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-        <p style="color: gray; font-size: 13px; margin-bottom: 20px;">النسخة الاحترافية لاستنساخ الأصوات 🎤</p>
+        <p style="color: gray; font-size: 13px; margin-bottom: 20px;">النسخة الاحترافية السريعة لاستنساخ الأصوات 🎤</p>
 
         <div class="input-group">
             <label>1. ارفع عينة صوتك (Original Voice):</label>
@@ -42,7 +42,7 @@
 
         <div class="input-group">
             <label>2. النص المراد نطقُه بصوتك:</label>
-            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا باللغة العربية أو الإنجليزية..."></textarea>
+            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
         </div>
 
         <button class="btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
@@ -63,26 +63,31 @@
             return;
         }
 
-        status.innerHTML = "<span class='loader'>⏳ جاري معالجة الصوت عبر سيرفر KARIM13 الخاص...</span>";
+        status.innerHTML = "<span class='loader'>⏳ جاري استخدام سيرفر KARIM13 السريع... انتظر ثوانٍ</span>";
 
         try {
-            // الربط باستخدام الـ Token الجديد الخاص بك
-            const app = await client("https://mrfakename-f5-tts.hf.space/", {
+            // استخدام محرك Fish Speech الأسرع مع التوكن الخاص بك
+            const app = await client("https://fishaudio-fish-speech-1.hf.space/", {
                 hf_token: "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" 
             });
             
-            const result = await app.predict("/predict", [audioFile, text, "F5-TTS", false]);
+            // إرسال الطلب للمحرك
+            const result = await app.predict("/process", [
+                audioFile, 
+                text,      
+                "اللغة العربية" 
+            ]);
 
             const audioUrl = result.data[0].url;
             status.innerHTML = `
-                <p style="color: green; font-weight: bold;">✅ تم استنساخ الصوت بنجاح!</p>
+                <p style="color: green; font-weight: bold;">✅ تم التوليد بنجاح!</p>
                 <audio controls src="${audioUrl}"></audio>
                 <br><br>
                 <a href="${audioUrl}" download style="display: inline-block; padding: 10px 20px; background: #eee; border-radius: 5px; text-decoration: none; color: #333; font-size: 13px;">تحميل الملف 📥</a>
             `;
         } catch (error) {
             console.error(error);
-            status.innerHTML = "<span style='color: red;'>❌ عذراً، السيرفر مزدحم حالياً. حاول مرة أخرى بعد ثوانٍ.</span>";
+            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول حالياً. يرجى المحاولة مرة أخرى بعد قليل.</span>";
         }
     }
 </script>
