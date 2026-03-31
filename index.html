@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARIMTREIZE13 AI - Voice Cloning</title>
+    <title>KARIMTREIZE13 AI</title>
     <style>
         :root { --primary: #00d282; --dark: #1a1a1a; }
         body { background-color: #f4f7f6; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
@@ -14,8 +14,8 @@
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
         input[type="file"], textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
         .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; }
-        #status { margin-top: 15px; font-size: 14px; }
-        audio { width: 100%; margin-top: 15px; }
+        #status { margin-top: 15px; font-size: 14px; min-height: 40px; }
+        audio { width: 100%; margin-top: 15px; display: none; }
         .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
@@ -23,7 +23,7 @@
 
 <div class="container">
     <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-    <p style="color: #888; font-size: 12px; margin-bottom: 20px;">استنساخ الأصوات الاحترافي 🎙️</p>
+    <p style="color: #888; font-size: 12px; margin-bottom: 20px;">استنساخ الأصوات (سيرفر سريع) 🎙️</p>
 
     <div class="box">
         <label>1. ارفع عينة صوتك (MP3/WAV):</label>
@@ -32,24 +32,25 @@
 
     <div class="box">
         <label>2. النص الذي سيقوله الصوت:</label>
-        <textarea id="textInput" rows="3" placeholder="اكتب هنا..."></textarea>
+        <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
     </div>
 
-    <button class="btn" onclick="startCloning()">توليد الصوت المستنسخ ✨</button>
+    <button class="btn" onclick="processVoice()">توليد الصوت المستنسخ ✨</button>
 
     <div id="status"></div>
-    <audio id="audioPlayer" controls style="display:none;"></audio>
-    <a id="downloadBtn" class="download-btn">تحميل الملف 📥</a>
+    <audio id="audioPlayer" controls></audio>
+    <a id="downloadBtn" class="download-btn">تحميل الملف الصوتي 📥</a>
 </div>
 
 <script>
-    async function startCloning() {
+    async function processVoice() {
         const fileInput = document.getElementById('voiceFile');
         const text = document.getElementById('textInput').value;
         const status = document.getElementById('status');
         const audioPlayer = document.getElementById('audioPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
 
+        // المفتاح الجديد الذي أرسلته
         const API_KEY = "Sk_1dbc0777c2ae1a8120c1fdf4fece6144a7b731d72cb2f8e8";
 
         if (!fileInput.files[0] || !text) {
@@ -57,25 +58,31 @@
             return;
         }
 
-        status.innerHTML = "⏳ جاري استنساخ الصوت... قد يستغرق لحظات";
-        
+        status.innerHTML = "⏳ جاري الاستنساخ والتوليد... يرجى الانتظار";
+        audioPlayer.style.display = "none";
+        downloadBtn.style.display = "none";
+
         try {
-            // 1. إضافة الصوت لـ ElevenLabs (Instant Voice Cloning)
+            // إضافة الصوت لـ ElevenLabs
             const formData = new FormData();
-            formData.append('name', 'TempVoice_' + Date.now());
+            formData.append('name', 'UserVoice_' + Date.now());
             formData.append('files', fileInput.files[0]);
 
-            const addVoiceRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
+            const addRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
                 method: "POST",
                 headers: { "xi-api-key": API_KEY },
                 body: formData
             });
 
-            const voiceData = await addVoiceRes.json();
-            const voiceId = voiceData.voice_id;
+            const voiceData = await addRes.json();
+            
+            if (!voiceData.voice_id) {
+                status.innerHTML = "<span style='color:red;'>❌ خطأ: تأكد من الرصيد أو صلاحية المفتاح.</span>";
+                return;
+            }
 
-            // 2. تحويل النص باستخدام الصوت الجديد
-            const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+            // توليد الكلام
+            const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceData.voice_id}`, {
                 method: "POST",
                 headers: { "xi-api-key": API_KEY, "Content-Type": "application/json" },
                 body: JSON.stringify({ text: text, model_id: "eleven_multilingual_v2" })
@@ -84,17 +91,17 @@
             if (ttsRes.ok) {
                 const blob = await ttsRes.blob();
                 const url = URL.createObjectURL(blob);
-                status.innerHTML = "✅ تم الاستنساخ بنجاح!";
+                status.innerHTML = "<span style='color:green;'>✅ تم التوليد بنجاح!</span>";
                 audioPlayer.src = url;
                 audioPlayer.style.display = "block";
                 downloadBtn.href = url;
-                downloadBtn.download = "Cloned_Voice_Karim13.mp3";
+                downloadBtn.download = "Karim13_Cloned.mp3";
                 downloadBtn.style.display = "inline-block";
             } else {
-                status.innerHTML = "❌ خطأ في التوليد. تأكد من الرصيد.";
+                status.innerHTML = "<span style='color:red;'>❌ خطأ في تحويل النص.</span>";
             }
         } catch (e) {
-            status.innerHTML = "❌ فشل النظام. حاول مرة أخرى.";
+            status.innerHTML = "<span style='color:red;'>❌ فشل الاتصال بالسيرفر.</span>";
         }
     }
 </script>
