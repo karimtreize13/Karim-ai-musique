@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karim AI - لوحة خدمات الصوت الذكية</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0d1117; color: white; text-align: center; padding: 20px; }
+        .panel { background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 20px; max-width: 450px; margin: auto; box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
+        .logo { font-size: 24px; font-weight: bold; color: #58a6ff; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; text-align: right; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: #8b949e; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background-color: #238636; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background-color: #2ea043; }
+        .footer { margin-top: 20px; font-size: 12px; color: #8b949e; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <div class="logo">KARIM AI MUSIQUE 🚀</div>
+    
+    <div class="input-group">
+        <label>اختر خدمة الصوت:</label>
+        <select>
+            <option>استنساخ صوت احترافي (F5-TTS)</option>
+            <option>تحويل النص إلى موسيقى (AI Music)</option>
+            <option>تحويل النص إلى صوت (عربي/فرنسي)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>ارفع عينة الصوت (Reference Audio):</label>
+        <input type="file" accept="audio/*">
+    </div>
+
+    <div class="input-group">
+        <label>اكتب النص المراد توليده:</label>
+        <textarea rows="4" placeholder="مثال: مرحباً بكم في لوحة كريم للخدمات الذكية..."></textarea>
+    </div>
+
+    <button onclick="alert('سيتم ربط المحرك غداً بمجرد تجدد النقاط!')">توليد الصوت الآن ✨</button>
+    
+    <div class="footer">جميع الحقوق محفوظة لـ Karim Treize © 2026</div>
+</div>
+
+</body>
+</html>
