@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KARIMTREIZE13 AI</title>
     <style>
-        :root { --primary: #00d282; --dark: #1a1a1a; }
+        :root { --primary: #00d282; --dark: #1a1a1a; --warning: #ffc107; }
         body { background-color: #f4f7f6; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .container { background: white; border-radius: 20px; width: 90%; max-width: 450px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
         .logo { font-size: 26px; font-weight: bold; margin-bottom: 5px; }
-        .logo span { color: #ffc107; }
+        .logo span { color: var(--warning); }
         .box { background: #f9f9f9; border: 1px dashed #ccc; border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: right; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
-        input[type="file"], textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; }
+        input[type="file"], textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,210,130,0.3); }
         #status { margin-top: 15px; font-size: 14px; min-height: 40px; }
         audio { width: 100%; margin-top: 15px; display: none; }
-        .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
+        .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-    <p style="color: #888; font-size: 12px; margin-bottom: 20px;">استنساخ الأصوات (سيرفر سريع) 🎙️</p>
+    <p style="color: #888; font-size: 13px; margin-bottom: 20px;">استنساخ الأصوات الاحترافي 🎙️</p>
 
     <div class="box">
-        <label>1. ارفع عينة صوتك (MP3/WAV):</label>
+        <label>1. ارفع عينة الصوت (MP3/WAV):</label>
         <input type="file" id="voiceFile" accept="audio/*">
     </div>
 
@@ -35,7 +35,7 @@
         <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
     </div>
 
-    <button class="btn" onclick="processVoice()">توليد الصوت المستنسخ ✨</button>
+    <button class="btn" onclick="processVoiceCloning()">توليد الصوت المستنسخ ✨</button>
 
     <div id="status"></div>
     <audio id="audioPlayer" controls></audio>
@@ -43,65 +43,75 @@
 </div>
 
 <script>
-    async function processVoice() {
+    async function processVoiceCloning() {
         const fileInput = document.getElementById('voiceFile');
         const text = document.getElementById('textInput').value;
         const status = document.getElementById('status');
         const audioPlayer = document.getElementById('audioPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        // المفتاح الجديد الذي أرسلته
-        const API_KEY = "Sk_1dbc0777c2ae1a8120c1fdf4fece6144a7b731d72cb2f8e8";
+        // المفتاح الجديد الخاص بك
+        const API_KEY = "Sk_128497b9e0588450f85daf1a0cb0c580990a229bc0c26562";
 
         if (!fileInput.files[0] || !text) {
-            alert("يرجى رفع ملف صوتي وكتابة نص!");
+            alert("يرجى رفع ملف صوتي وكتابة نص أولاً!");
             return;
         }
 
-        status.innerHTML = "⏳ جاري الاستنساخ والتوليد... يرجى الانتظار";
+        status.innerHTML = "<span style='color:#007bff;'>⏳ جاري معالجة الصوت... يرجى الانتظار</span>";
         audioPlayer.style.display = "none";
         downloadBtn.style.display = "none";
 
         try {
-            // إضافة الصوت لـ ElevenLabs
+            // الخطوة 1: رفع الصوت لإنشاء بصمة صوتية
             const formData = new FormData();
-            formData.append('name', 'UserVoice_' + Date.now());
+            formData.append('name', 'Clone_' + Date.now());
             formData.append('files', fileInput.files[0]);
 
-            const addRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
+            const addVoiceRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
                 method: "POST",
                 headers: { "xi-api-key": API_KEY },
                 body: formData
             });
 
-            const voiceData = await addRes.json();
+            const voiceData = await addVoiceRes.json();
             
             if (!voiceData.voice_id) {
                 status.innerHTML = "<span style='color:red;'>❌ خطأ: تأكد من الرصيد أو صلاحية المفتاح.</span>";
                 return;
             }
 
-            // توليد الكلام
+            // الخطوة 2: توليد الكلام باستخدام الصوت المستنسخ
             const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceData.voice_id}`, {
                 method: "POST",
-                headers: { "xi-api-key": API_KEY, "Content-Type": "application/json" },
-                body: JSON.stringify({ text: text, model_id: "eleven_multilingual_v2" })
+                headers: { 
+                    "xi-api-key": API_KEY, 
+                    "Content-Type": "application/json" 
+                },
+                body: JSON.stringify({ 
+                    text: text, 
+                    model_id: "eleven_multilingual_v2",
+                    voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+                })
             });
 
             if (ttsRes.ok) {
                 const blob = await ttsRes.blob();
                 const url = URL.createObjectURL(blob);
-                status.innerHTML = "<span style='color:green;'>✅ تم التوليد بنجاح!</span>";
+                
+                status.innerHTML = "<span style='color:green; font-weight:bold;'>✅ تم التوليد بنجاح!</span>";
+                
                 audioPlayer.src = url;
                 audioPlayer.style.display = "block";
+                
                 downloadBtn.href = url;
-                downloadBtn.download = "Karim13_Cloned.mp3";
+                downloadBtn.download = "Karim13_Voice.mp3";
                 downloadBtn.style.display = "inline-block";
             } else {
-                status.innerHTML = "<span style='color:red;'>❌ خطأ في تحويل النص.</span>";
+                status.innerHTML = "<span style='color:red;'>❌ خطأ في التوليد. قد يكون الرصيد منتهي.</span>";
             }
-        } catch (e) {
-            status.innerHTML = "<span style='color:red;'>❌ فشل الاتصال بالسيرفر.</span>";
+        } catch (error) {
+            status.innerHTML = "<span style='color:red;'>❌ فشل النظام. حاول مرة أخرى.</span>";
         }
     }
 </script>
