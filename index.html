@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARIMTREIZE13 AI - Voice Clone</title>
+    <title>KARIMTREIZE13 AI</title>
     <style>
         :root { --bg: #f8f9f0; --blue: #0d6efd; --green: #00d282; --orange: #ffc107; }
         body { background-color: var(--bg); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
@@ -14,11 +14,10 @@
         .logo span { color: var(--orange); }
         .input-box { background: #f1f3f5; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: right; border: 1px solid #ddd; }
         label { display: block; margin-bottom: 10px; font-weight: bold; color: #444; }
-        input, textarea { width: 100%; border: 1px solid #ccc; border-radius: 6px; padding: 10px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 16px; border-radius: 10px; border: none; background: var(--green); color: white; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn:hover { background: #00b972; }
+        input, textarea { width: 100%; border: 1px solid #ccc; border-radius: 6px; padding: 10px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 16px; border-radius: 10px; border: none; background: var(--green); color: white; font-weight: bold; cursor: pointer; font-size: 18px; }
         #status { margin-top: 20px; font-size: 15px; min-height: 50px; }
-        audio { width: 100%; margin-top: 15px; border-radius: 30px; }
+        audio { width: 100%; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -27,18 +26,15 @@
     <div class="header"></div>
     <div class="content">
         <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">🎙️ استنساخ الأصوات الاحترافي (سيرفر خاص)</p>
-
+        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">🎙️ استنساخ الأصوات (السيرفر السريع)</p>
         <div class="input-box">
-            <label>1. ارفع عينة صوتك (MP3/WAV):</label>
+            <label>1. ارفع عينة صوتك:</label>
             <input type="file" id="audioInput" accept="audio/*">
         </div>
-
         <div class="input-box">
-            <label>2. النص الذي سيقوله صوتك:</label>
-            <textarea id="textInput" rows="3" placeholder="اكتب هنا باللغة العربية..."></textarea>
+            <label>2. النص المراد نطقُه:</label>
+            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
         </div>
-
         <button class="btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
         <div id="status"></div>
     </div>
@@ -52,33 +48,30 @@
         const audioFile = document.getElementById('audioInput').files[0];
         const status = document.getElementById('status');
 
-        if (!text || !audioFile) {
-            alert("يا كريم، يرجى رفع الملف وكتابة النص أولاً!");
-            return;
-        }
+        if (!text || !audioFile) { alert("يا كريم، ارفع الملف واكتب النص!"); return; }
 
-        status.innerHTML = "<span style='color: blue; font-weight: bold;'>⏳ جاري الاتصال بسيرفرك الخاص.. انتظر قليلاً</span>";
+        status.innerHTML = "<span style='color: blue; font-weight: bold;'>⏳ جاري المعالجة السريعة... انتظر ثانية واحدة</span>";
 
         try {
-            // استخدام التوكن الخاص بك للوصول للسيرفر
-            const app = await client("https://mrfakename-f5-tts.hf.space/", {
+            // استخدام محرك Fish Speech الأسرع
+            const app = await client("https://fishaudio-fish-speech-1.hf.space/", {
                 hf_token: "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" 
             });
             
-            const result = await app.predict("/predict", [audioFile, text, "F5-TTS", false]);
+            const result = await app.predict("/process", [
+                audioFile, 
+                text,      
+                "اللغة العربية" 
+            ]);
 
-            if (result.data && result.data[0]) {
-                const audioUrl = result.data[0].url;
-                status.innerHTML = `
-                    <p style="color: green; font-weight: bold;">✅ تم التوليد بنجاح!</p>
-                    <audio controls src="${audioUrl}"></audio>
-                    <br><a href="${audioUrl}" download style="color: blue; font-size: 12px; display: block; margin-top: 10px;">تحميل الملف 📥</a>
-                `;
-            }
+            const audioUrl = result.data[0].url;
+            status.innerHTML = `
+                <p style="color: green; font-weight: bold;">✅ تم التوليد بنجاح!</p>
+                <audio controls src="${audioUrl}"></audio>
+                <br><a href="${audioUrl}" download style="color: blue; font-size: 12px; display: block; margin-top: 10px;">تحميل الملف 📥</a>
+            `;
         } catch (error) {
-            console.error(error);
-            status.innerHTML = "<span style='color: red;'>❌ السيرفر مزدحم جداً الآن. سأحاول مرة أخرى تلقائياً بعد 5 ثوانٍ...</span>";
-            setTimeout(generateVoice, 5000); // محاولة تلقائية
+            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول، أعد المحاولة بعد 3 ثوانٍ فقط.</span>";
         }
     }
 </script>
