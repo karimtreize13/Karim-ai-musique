@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim AI Musique | استنساخ الأصوات الاحترافي</title>
+    <title>Karim AI Musique | SMM Paname AI Panel</title>
     <style>
-        /* تعريف الألوان مأخوذة من image_13.png */
+        /* تعريف الألوان مأخوذة بدقة من image_13.png */
         :root {
-            --bg-main: #212529; /* لون الخلفية الداكن */
-            --card-bg: #343a40; /* لون الأزرار والخانات الرمادي */
-            --highlight-blue: #0d6efd; /* لون التمييز الأزرق */
-            --text-primary: #ffffff;
-            --text-muted: #adb5bd;
-            --accent-orange: #ffc107; /* اللون البرتقالي/الأصفر من الشعار */
+            --bg-body: #f8f9f0; /* لون الخلفية البيج الفاتح */
+            --bg-card: #ffffff; /* لون البطاقة الأبيض */
+            --primary-blue: #0d6efd; /* اللون الأزرق من القائمة العلوي */
+            --accent-green: #00d282; /* اللون الأخضر من الدائرة */
+            --accent-orange: #ffc107; /* اللون البرتقالي/الأصفر من الأزرار */
+            --text-dark: #212529; /* لون النص الأساسي */
+            --text-muted: #6c757d; /* لون النص الباهت */
+            --border-color: #dee2e6; /* لون الحدود */
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 10px;
             display: flex;
@@ -27,49 +29,51 @@
             min-height: 100vh;
         }
 
-        .main-card {
-            background: var(--card-bg);
-            padding: 0; /* لتطبيق شريط التمييز في الأعلى تماماً */
-            border-radius: 12px; /* حواف دائرية مثل image_13.png */
+        /* تنسيق البطاقة الأساسية على شكل بطاقة الطلب في image_13.png */
+        .container {
+            background: var(--bg-card);
+            padding: 0; /* الشريط الأزرق سيكون جزءاً من الهيدر */
+            border-radius: 12px; /* حواف دائرية واضحة */
             width: 100%;
-            max-width: 400px;
-            text-align: right;
-            border: none;
-            overflow: hidden; /* للحفاظ على الحواف الدائرية مع الشريط */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            max-width: 420px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* ظل خفيف جداً للاحترافية */
+            overflow: hidden; /* للحفاظ على الحواف الدائرية */
+            border: 1px solid var(--border-color); /* حدود خارجية مثل image_13.png */
         }
 
-        /* شريط التمييز العلوي الأزرق من image_13.png */
+        /* شريط التمييز الأزرق العلوي من image_13.png */
         .card-header-bar {
-            background-color: var(--highlight-blue);
-            height: 8px;
+            background-color: var(--primary-blue);
+            height: 10px;
             width: 100%;
         }
 
-        .card-content {
-            padding: 20px 15px;
+        .card-body {
+            padding: 20px;
         }
 
-        /* تنسيق اللوجو المدمج */
-        .logo-area {
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 5px;
+        /* تنسيق الاسم ليكون مثل الشعار في image_13.png */
+        .header {
             text-align: center;
+            margin-bottom: 25px;
         }
-        .logo-karim { color: var(--text-primary); }
-        .logo-treize { color: var(--accent-orange); } /* اللون الثاني من الشعار القديم */
-
-        .sub-title {
+        .header-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+        .header-karim { color: var(--text-dark); }
+        .header-treize { color: var(--accent-orange); } /* اللون البرتقالي من الشعار القديم */
+        
+        .header-subtitle {
             color: var(--text-muted);
             font-size: 13px;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-top: 5px;
         }
 
         .input-group {
-            background: var(--bg-main); /* لون الخلفية الأغمق داخل الخانة */
-            border: 1px solid #495057;
+            background: var(--bg-body); /* لون الخلفية داخل الخانة */
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 12px;
@@ -78,59 +82,66 @@
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 12px;
-            color: var(--text-muted);
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 600;
         }
 
         input, textarea, select {
             width: 100%;
             background: transparent;
             border: none;
-            color: var(--text-primary);
+            color: var(--text-dark);
             outline: none;
             font-size: 14px;
         }
 
-        /* تنسيق الزر الأخضر من image_12.png */
+        /* زر التوليد الأخضر مأخوذ من الدائرة الخضراء في image_13.png */
         .generate-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--accent-green);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .generate-btn:hover { background-color: #00b571; }
+
+        /* زر التواصل مأخوذ من تصميم الزر البرتقالي في image_13.png */
+        .contact-btn {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
             border: none;
-            background-color: #28a745; /* نفس لون الزر الأخضر الأصلي */
-            color: white;
+            background-color: var(--accent-orange);
+            color: var(--text-dark);
             font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
             font-size: 15px;
-            margin-top: 5px;
-        }
-
-        .generate-btn:hover { background-color: #218838; }
-
-        /* تنسيق زر الواتساب */
-        .whatsapp-link {
-            display: block;
-            text-align: center;
-            color: #25d366;
-            text-decoration: none;
-            font-size: 14px;
             margin-top: 15px;
-            font-weight: bold;
         }
+        .contact-btn:hover { background-color: #e0a800; }
 
-        .status { margin-top: 10px; font-size: 12px; color: #ffc107; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="main-card">
+<div class="container">
     <div class="card-header-bar"></div>
     
-    <div class="card-content">
-        <div class="logo-area">
-            <span class="logo-karim">KARIM</span><span class="logo-treize">TREIZE13</span> AI
+    <div class="card-body">
+        <div class="header">
+            <div class="header-title">
+                <span class="header-karim">KARIM</span><span class="header-treize">TREIZE13</span> AI
+            </div>
+            <p class="header-subtitle">SMS Paname PANEL - فرع خدمات الصوت الذكية 🎧</p>
         </div>
-        <p class="sub-title">SMS Paname PANEL - فرع استنساخ الأصوات 🎧</p>
 
         <div class="input-group">
             <label>اختر خدمة الصوت:</label>
@@ -141,26 +152,24 @@
         </div>
 
         <div class="input-group">
-            <label>ارفع عينة الصوت (Reference Audio):</label>
+            <label>ارفع عينة الصوت (MP3/WAV):</label>
             <input type="file" id="audioInput" accept="audio/*">
         </div>
 
         <div class="input-group">
             <label>اكتب النص المراد توليده:</label>
-            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
+            <textarea id="textInput" rows="4" placeholder="اكتب النص هنا..."></textarea>
         </div>
 
         <button class="generate-btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
-        <div id="status" class="status"></div>
 
-        <a href="https://wa.me/213XXXXXXX" class="whatsapp-link">تواصل معي لخدمات SMM وتطوير الموقع ✅</a>
+        <button class="contact-btn" onclick="window.location.href='https://wa.me/213XXXXXXX'">تواصل معي عبر واتساب ✅</button>
     </div>
 </div>
 
 <script>
     function generateVoice() {
-        const status = document.getElementById('status');
-        status.innerText = "جاري تفعيل الربط مع لوحة SMS Paname.. جرب المحاولة غداً.";
+        alert("جاري تفعيل الربط مع لوحة SMS Paname.. النقاط ستتجدد غداً.");
     }
 </script>
 
