@@ -13,17 +13,17 @@
         .box { background: #f9f9f9; border: 1px dashed #ccc; border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: right; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
         input[type="file"], textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,210,130,0.3); }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; margin-top: 10px; }
         #status { margin-top: 15px; font-size: 14px; min-height: 40px; }
         audio { width: 100%; margin-top: 15px; display: none; }
-        .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 15px; }
+        .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-    <p style="color: #888; font-size: 13px; margin-bottom: 20px;">استنساخ الأصوات الاحترافي 🎙️</p>
+    <p style="color: #888; font-size: 13px; margin-bottom: 20px;">استنساخ الأصوات (سيرفر سريع) 🎙️</p>
 
     <div class="box">
         <label>1. ارفع عينة الصوت (MP3/WAV):</label>
@@ -31,11 +31,11 @@
     </div>
 
     <div class="box">
-        <label>2. النص الذي سيقوله الصوت:</label>
+        <label>2. النص المراد نُطقه:</label>
         <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
     </div>
 
-    <button class="btn" onclick="processVoiceCloning()">توليد الصوت المستنسخ ✨</button>
+    <button class="btn" onclick="generateVoice()">توليد الصوت المستنسخ ✨</button>
 
     <div id="status"></div>
     <audio id="audioPlayer" controls></audio>
@@ -43,75 +43,76 @@
 </div>
 
 <script>
-    async function processVoiceCloning() {
+    async function generateVoice() {
         const fileInput = document.getElementById('voiceFile');
         const text = document.getElementById('textInput').value;
         const status = document.getElementById('status');
         const audioPlayer = document.getElementById('audioPlayer');
         const downloadBtn = document.getElementById('downloadBtn');
 
-        // المفتاح الجديد الخاص بك
         const API_KEY = "Sk_128497b9e0588450f85daf1a0cb0c580990a229bc0c26562";
 
         if (!fileInput.files[0] || !text) {
-            alert("يرجى رفع ملف صوتي وكتابة نص أولاً!");
+            alert("يرجى رفع ملف صوتي وكتابة نص!");
             return;
         }
 
-        status.innerHTML = "<span style='color:#007bff;'>⏳ جاري معالجة الصوت... يرجى الانتظار</span>";
+        status.innerHTML = "⏳ جاري معالجة الصوت... يرجى الانتظار";
         audioPlayer.style.display = "none";
         downloadBtn.style.display = "none";
 
         try {
-            // الخطوة 1: رفع الصوت لإنشاء بصمة صوتية
+            // 1. رفع الصوت لإنشاء الهوية الصوتية
             const formData = new FormData();
-            formData.append('name', 'Clone_' + Date.now());
+            formData.append('name', 'TempClone_' + Date.now());
             formData.append('files', fileInput.files[0]);
 
-            const addVoiceRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
+            const addRes = await fetch("https://api.elevenlabs.io/v1/voices/add", {
                 method: "POST",
                 headers: { "xi-api-key": API_KEY },
                 body: formData
             });
 
-            const voiceData = await addVoiceRes.json();
-            
-            if (!voiceData.voice_id) {
-                status.innerHTML = "<span style='color:red;'>❌ خطأ: تأكد من الرصيد أو صلاحية المفتاح.</span>";
+            const voiceData = await addRes.json();
+            const voiceId = voiceData.voice_id;
+
+            if (!voiceId) {
+                status.innerHTML = "<span style='color:red;'>❌ الرصيد منتهي! يرجى استخدام حساب جديد.</span>";
                 return;
             }
 
-            // الخطوة 2: توليد الكلام باستخدام الصوت المستنسخ
-            const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceData.voice_id}`, {
+            // 2. توليد الكلام
+            const ttsRes = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
                 method: "POST",
-                headers: { 
-                    "xi-api-key": API_KEY, 
-                    "Content-Type": "application/json" 
-                },
+                headers: { "xi-api-key": API_KEY, "Content-Type": "application/json" },
                 body: JSON.stringify({ 
                     text: text, 
                     model_id: "eleven_multilingual_v2",
-                    voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+                    voice_settings: { stability: 0.5, similarity_boost: 0.8 }
                 })
             });
 
             if (ttsRes.ok) {
                 const blob = await ttsRes.blob();
                 const url = URL.createObjectURL(blob);
-                
-                status.innerHTML = "<span style='color:green; font-weight:bold;'>✅ تم التوليد بنجاح!</span>";
-                
+                status.innerHTML = "<span style='color:green;'>✅ تم التوليد بنجاح!</span>";
                 audioPlayer.src = url;
                 audioPlayer.style.display = "block";
-                
                 downloadBtn.href = url;
                 downloadBtn.download = "Karim13_Voice.mp3";
                 downloadBtn.style.display = "inline-block";
+
+                // 3. حذف الصوت من السيرفر فوراً لتوفير المساحة
+                fetch(`https://api.elevenlabs.io/v1/voices/${voiceId}`, {
+                    method: "DELETE",
+                    headers: { "xi-api-key": API_KEY }
+                });
+
             } else {
-                status.innerHTML = "<span style='color:red;'>❌ خطأ في التوليد. قد يكون الرصيد منتهي.</span>";
+                status.innerHTML = "<span style='color:red;'>❌ خطأ: الحروف المجانية انتهت.</span>";
             }
-        } catch (error) {
-            status.innerHTML = "<span style='color:red;'>❌ فشل النظام. حاول مرة أخرى.</span>";
+        } catch (e) {
+            status.innerHTML = "<span style='color:red;'>❌ فشل في الاتصال بالسيرفر.</span>";
         }
     }
 </script>
