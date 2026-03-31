@@ -3,89 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim AI Musique | SMM Paname AI</title>
+    <title>Karim AI Musique</title>
     <style>
-        /* الألوان مأخوذة من هويتك التجارية SMM Paname */
+        /* التنسيق الذي يظهر في صورتك الأخيرة */
         :root {
             --bg-body: #f8f9f0;
-            --bg-card: #ffffff;
             --primary-blue: #0d6efd;
             --accent-green: #00d282;
             --accent-orange: #ffc107;
-            --text-dark: #212529;
-            --border-color: #dee2e6;
         }
-
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background: var(--bg-card);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header-bar {
-            background-color: var(--primary-blue);
-            height: 10px;
-            width: 100%;
-        }
-
-        .card-body { padding: 20px; }
-
-        .header { text-align: center; margin-bottom: 20px; }
-        .header-karim { font-weight: bold; font-size: 22px; color: var(--text-dark); }
-        .header-treize { font-weight: bold; font-size: 22px; color: var(--accent-orange); }
-
-        .input-group {
-            background: #f1f3f5;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
-        input, textarea, select { width: 100%; background: transparent; border: none; outline: none; font-size: 14px; }
-
-        .generate-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: none;
-            background-color: var(--accent-green);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #status { margin-top: 15px; text-align: center; font-size: 13px; }
+        body { background-color: var(--bg-body); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #dee2e6; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .header-bar { background: var(--primary-blue); height: 8px; }
+        .content { padding: 20px; text-align: center; }
+        .logo { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
+        .logo span { color: var(--accent-orange); }
+        .input-group { background: #f1f3f5; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-align: right; border: 1px solid #dee2e6; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+        input, textarea { width: 100%; border: none; background: transparent; outline: none; font-size: 14px; }
+        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--accent-green); color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #status { margin-top: 15px; font-size: 13px; }
         audio { width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="card-header-bar"></div>
-    <div class="card-body">
-        <div class="header">
-            <span class="header-karim">KARIM</span><span class="header-treize">TREIZE13</span> AI
-            <p style="font-size: 12px; color: gray;">فرع استنساخ الأصوات الاحترافي 🎧</p>
-        </div>
+    <div class="header-bar"></div>
+    <div class="content">
+        <div class="logo">KARIM<span>TREIZE13</span> AI</div>
+        <p style="color: gray; font-size: 12px;">فرع استنساخ الأصوات الاحترافي 🎧</p>
 
         <div class="input-group">
             <label>ارفع عينة الصوت (صوتك الأصلي):</label>
@@ -97,8 +44,7 @@
             <textarea id="textInput" rows="3" placeholder="اكتب هنا..."></textarea>
         </div>
 
-        <button class="generate-btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
-
+        <button class="btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
         <div id="status"></div>
     </div>
 </div>
@@ -116,27 +62,21 @@
             return;
         }
 
-        status.innerHTML = "<span style='color: blue;'>⏳ جاري معالجة الصوت.. انتظر قليلاً</span>";
+        status.innerHTML = "<span style='color: blue;'>⏳ جاري استنساخ الصوت.. يرجى الانتظار</span>";
 
         try {
-            // الاتصال بمحرك F5-TTS
+            // الاتصال بالمحرك العالمي
             const app = await client("https://mrfakename-f5-tts.hf.space/");
-            const result = await app.predict("/predict", [
-                audioFile, 
-                text, 
-                "F5-TTS", 
-                false, 
-            ]);
+            const result = await app.predict("/predict", [audioFile, text, "F5-TTS", false]);
 
             const audioUrl = result.data[0].url;
             status.innerHTML = `
-                <p style="color: green; font-weight: bold;">✅ تم استنساخ الصوت بنجاح:</p>
+                <p style="color: green;">✅ تم النسخ بنجاح!</p>
                 <audio controls src="${audioUrl}"></audio>
-                <br><br>
-                <a href="${audioUrl}" download style="color: blue;">تحميل الملف الصوتي 📥</a>
+                <br><a href="${audioUrl}" download style="color: blue; font-size: 12px;">تحميل الملف 📥</a>
             `;
         } catch (error) {
-            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول حالياً (نفدت النقاط المجانية). حاول مرة أخرى غداً.</span>";
+            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول حالياً. جرب مرة أخرى بعد قليل.</span>";
         }
     }
 </script>
