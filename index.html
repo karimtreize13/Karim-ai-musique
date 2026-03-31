@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karim AI Musique</title>
     <style>
-        /* التنسيق الذي يظهر في صورتك الأخيرة */
         :root {
             --bg-body: #f8f9f0;
             --primary-blue: #0d6efd;
@@ -13,17 +12,19 @@
             --accent-orange: #ffc107;
         }
         body { background-color: var(--bg-body); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #dee2e6; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .container { background: white; border-radius: 12px; width: 95%; max-width: 450px; border: 1px solid #dee2e6; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .header-bar { background: var(--primary-blue); height: 8px; }
-        .content { padding: 20px; text-align: center; }
-        .logo { font-size: 22px; font-weight: bold; margin-bottom: 5px; }
+        .content { padding: 25px; text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
         .logo span { color: var(--accent-orange); }
-        .input-group { background: #f1f3f5; border-radius: 8px; padding: 15px; margin-bottom: 15px; text-align: right; border: 1px solid #dee2e6; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
-        input, textarea { width: 100%; border: none; background: transparent; outline: none; font-size: 14px; }
-        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--accent-green); color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
-        #status { margin-top: 15px; font-size: 13px; }
-        audio { width: 100%; margin-top: 10px; }
+        .input-group { background: #f1f3f5; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: right; border: 1px solid #dee2e6; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; font-size: 14px; color: #333; }
+        input[type="file"], textarea { width: 100%; border: none; background: white; border-radius: 5px; padding: 10px; box-sizing: border-box; outline: none; font-size: 14px; border: 1px solid #ddd; }
+        .btn { width: 100%; padding: 15px; border-radius: 8px; border: none; background: var(--accent-green); color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn:hover { background: #00b972; }
+        #status { margin-top: 20px; font-size: 14px; line-height: 1.6; }
+        audio { width: 100%; margin-top: 15px; }
+        .loader { color: blue; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -32,16 +33,16 @@
     <div class="header-bar"></div>
     <div class="content">
         <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-        <p style="color: gray; font-size: 12px;">فرع استنساخ الأصوات الاحترافي 🎧</p>
+        <p style="color: gray; font-size: 13px; margin-bottom: 20px;">النسخة الاحترافية لاستنساخ الأصوات 🎤</p>
 
         <div class="input-group">
-            <label>ارفع عينة الصوت (صوتك الأصلي):</label>
+            <label>1. ارفع عينة صوتك (Original Voice):</label>
             <input type="file" id="audioInput" accept="audio/*">
         </div>
 
         <div class="input-group">
-            <label>اكتب النص المراد نطقُه بصوتك:</label>
-            <textarea id="textInput" rows="3" placeholder="اكتب هنا..."></textarea>
+            <label>2. النص المراد نطقُه بصوتك:</label>
+            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا باللغة العربية أو الإنجليزية..."></textarea>
         </div>
 
         <button class="btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
@@ -58,25 +59,30 @@
         const status = document.getElementById('status');
 
         if (!text || !audioFile) {
-            alert("ارفع ملف الصوت واكتب النص أولاً!");
+            alert("يرجى رفع ملف الصوت وكتابة النص أولاً!");
             return;
         }
 
-        status.innerHTML = "<span style='color: blue;'>⏳ جاري استنساخ الصوت.. يرجى الانتظار</span>";
+        status.innerHTML = "<span class='loader'>⏳ جاري معالجة الصوت عبر سيرفر KARIM13 الخاص...</span>";
 
         try {
-            // الاتصال بالمحرك العالمي
-            const app = await client("https://mrfakename-f5-tts.hf.space/");
+            // الربط باستخدام الـ Token الجديد الخاص بك
+            const app = await client("https://mrfakename-f5-tts.hf.space/", {
+                hf_token: "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" 
+            });
+            
             const result = await app.predict("/predict", [audioFile, text, "F5-TTS", false]);
 
             const audioUrl = result.data[0].url;
             status.innerHTML = `
-                <p style="color: green;">✅ تم النسخ بنجاح!</p>
+                <p style="color: green; font-weight: bold;">✅ تم استنساخ الصوت بنجاح!</p>
                 <audio controls src="${audioUrl}"></audio>
-                <br><a href="${audioUrl}" download style="color: blue; font-size: 12px;">تحميل الملف 📥</a>
+                <br><br>
+                <a href="${audioUrl}" download style="display: inline-block; padding: 10px 20px; background: #eee; border-radius: 5px; text-decoration: none; color: #333; font-size: 13px;">تحميل الملف 📥</a>
             `;
         } catch (error) {
-            status.innerHTML = "<span style='color: red;'>❌ السيرفر مشغول حالياً. جرب مرة أخرى بعد قليل.</span>";
+            console.error(error);
+            status.innerHTML = "<span style='color: red;'>❌ عذراً، السيرفر مزدحم حالياً. حاول مرة أخرى بعد ثوانٍ.</span>";
         }
     }
 </script>
