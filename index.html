@@ -3,47 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim AI - لوحة خدمات الصوت الذكية</title>
+    <title>Karim AI Musique | استنساخ الأصوات الاحترافي</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0d1117; color: white; text-align: center; padding: 20px; }
-        .panel { background: #161b22; border: 1px solid #30363d; border-radius: 15px; padding: 20px; max-width: 450px; margin: auto; box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
-        .logo { font-size: 24px; font-weight: bold; color: #58a6ff; margin-bottom: 20px; }
-        .input-group { margin-bottom: 15px; text-align: right; }
-        label { display: block; margin-bottom: 5px; font-size: 14px; color: #8b949e; }
-        input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; border-radius: 8px; border: none; background-color: #238636; color: white; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { background-color: #2ea043; }
-        .footer { margin-top: 20px; font-size: 12px; color: #8b949e; }
+        /* تعريف الألوان مأخوذة من image_13.png */
+        :root {
+            --bg-main: #212529; /* لون الخلفية الداكن */
+            --card-bg: #343a40; /* لون الأزرار والخانات الرمادي */
+            --highlight-blue: #0d6efd; /* لون التمييز الأزرق */
+            --text-primary: #ffffff;
+            --text-muted: #adb5bd;
+            --accent-orange: #ffc107; /* اللون البرتقالي/الأصفر من الشعار */
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            padding: 0; /* لتطبيق شريط التمييز في الأعلى تماماً */
+            border-radius: 12px; /* حواف دائرية مثل image_13.png */
+            width: 100%;
+            max-width: 400px;
+            text-align: right;
+            border: none;
+            overflow: hidden; /* للحفاظ على الحواف الدائرية مع الشريط */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* شريط التمييز العلوي الأزرق من image_13.png */
+        .card-header-bar {
+            background-color: var(--highlight-blue);
+            height: 8px;
+            width: 100%;
+        }
+
+        .card-content {
+            padding: 20px 15px;
+        }
+
+        /* تنسيق اللوجو المدمج */
+        .logo-area {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        .logo-karim { color: var(--text-primary); }
+        .logo-treize { color: var(--accent-orange); } /* اللون الثاني من الشعار القديم */
+
+        .sub-title {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group {
+            background: var(--bg-main); /* لون الخلفية الأغمق داخل الخانة */
+            border: 1px solid #495057;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+            font-size: 14px;
+        }
+
+        /* تنسيق الزر الأخضر من image_12.png */
+        .generate-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #28a745; /* نفس لون الزر الأخضر الأصلي */
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 5px;
+        }
+
+        .generate-btn:hover { background-color: #218838; }
+
+        /* تنسيق زر الواتساب */
+        .whatsapp-link {
+            display: block;
+            text-align: center;
+            color: #25d366;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .status { margin-top: 10px; font-size: 12px; color: #ffc107; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="panel">
-    <div class="logo">KARIM AI MUSIQUE 🚀</div>
+<div class="main-card">
+    <div class="card-header-bar"></div>
     
-    <div class="input-group">
-        <label>اختر خدمة الصوت:</label>
-        <select>
-            <option>استنساخ صوت احترافي (F5-TTS)</option>
-            <option>تحويل النص إلى موسيقى (AI Music)</option>
-            <option>تحويل النص إلى صوت (عربي/فرنسي)</option>
-        </select>
-    </div>
+    <div class="card-content">
+        <div class="logo-area">
+            <span class="logo-karim">KARIM</span><span class="logo-treize">TREIZE13</span> AI
+        </div>
+        <p class="sub-title">SMS Paname PANEL - فرع استنساخ الأصوات 🎧</p>
 
-    <div class="input-group">
-        <label>ارفع عينة الصوت (Reference Audio):</label>
-        <input type="file" accept="audio/*">
-    </div>
+        <div class="input-group">
+            <label>اختر خدمة الصوت:</label>
+            <select id="model">
+                <option value="f5">استنساخ صوت احترافي (F5-TTS)</option>
+                <option value="e2">استنساخ صوت سريع (E2-TTS)</option>
+            </select>
+        </div>
 
-    <div class="input-group">
-        <label>اكتب النص المراد توليده:</label>
-        <textarea rows="4" placeholder="مثال: مرحباً بكم في لوحة كريم للخدمات الذكية..."></textarea>
-    </div>
+        <div class="input-group">
+            <label>ارفع عينة الصوت (Reference Audio):</label>
+            <input type="file" id="audioInput" accept="audio/*">
+        </div>
 
-    <button onclick="alert('سيتم ربط المحرك غداً بمجرد تجدد النقاط!')">توليد الصوت الآن ✨</button>
-    
-    <div class="footer">جميع الحقوق محفوظة لـ Karim Treize © 2026</div>
+        <div class="input-group">
+            <label>اكتب النص المراد توليده:</label>
+            <textarea id="textInput" rows="3" placeholder="اكتب النص هنا..."></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generateVoice()">توليد الصوت الآن ✨</button>
+        <div id="status" class="status"></div>
+
+        <a href="https://wa.me/213XXXXXXX" class="whatsapp-link">تواصل معي لخدمات SMM وتطوير الموقع ✅</a>
+    </div>
 </div>
+
+<script>
+    function generateVoice() {
+        const status = document.getElementById('status');
+        status.innerText = "جاري تفعيل الربط مع لوحة SMS Paname.. جرب المحاولة غداً.";
+    }
+</script>
 
 </body>
 </html>
