@@ -3,34 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحويل النص إلى صوت</title>
+    <title>ElevenLabs Professional Voice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f2f5; }
-        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        h1 { color: #333; font-size: 1.5rem; margin-bottom: 1.5rem; }
-        textarea { width: 100%; height: 120px; padding: 12px; border: 2px solid #e0e0e0; border-radius: 12px; resize: none; font-size: 1rem; margin-bottom: 1rem; box-sizing: border-box; }
-        button { background-color: #4a148c; color: white; border: none; padding: 12px 30px; border-radius: 10px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #6a1b9a; }
-        #audioContainer { margin-top: 1.5rem; }
-        audio { width: 100%; }
+        :root { --primary: #6a1b9a; --secondary: #4a148c; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app-card { background: white; width: 90%; max-width: 500px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 30px; overflow: hidden; }
+        header { border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        h2 { margin: 0; color: var(--primary); font-size: 1.4rem; }
+        .input-group { position: relative; margin-bottom: 20px; }
+        textarea { width: 100%; height: 150px; border: 2px solid #eee; border-radius: 15px; padding: 15px; font-size: 1rem; resize: none; box-sizing: border-box; transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); outline: none; }
+        .char-count { font-size: 0.8rem; color: #888; text-align: left; margin-top: 5px; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        button:hover { background: var(--secondary); transform: translateY(-2px); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #resultArea { margin-top: 25px; padding: 15px; background: #f3e5f5; border-radius: 15px; display: none; }
+        audio { width: 100%; margin-top: 10px; }
+        .text-output { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9rem; color: #555; border-right: 4px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>تحويل النص إلى صوت</h1>
-    <textarea id="userInput" placeholder="مرحبا بكم في عالمي الخاص..."></textarea>
-    <button onclick="generateSpeech()">تحويل الآن</button>
-    <div id="audioContainer"></div>
+<div class="app-card">
+    <header>
+        <h2><i class="fas fa-microphone-alt"></i> استوديو الصوت الذكي</h2>
+    </header>
+
+    <div class="input-group">
+        <textarea id="textInput" placeholder="أدخل النص المراد تحويله هنا..." oninput="updateCount()"></textarea>
+        <div class="char-count">عدد الحروف: <span id="count">0</span></div>
+    </div>
+
+    <button id="genBtn" onclick="generateSpeech()">
+        <i class="fas fa-magic"></i> تحويل إلى صوت
+    </button>
+
+    <div id="resultArea">
+        <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">تم التوليد بنجاح:</div>
+        <div id="audioPlaceholder"></div>
+        <div class="text-output" id="transcriptionText"></div>
+        <button onclick="copyText()" style="background:none; color:var(--primary); padding:5px; font-size:0.8rem; width:auto; margin-top:5px;">
+            <i class="fas fa-copy"></i> نسخ النص (الكتابة)
+        </button>
+    </div>
 </div>
 
 <script>
-    async function generateSpeech() {
-        const text = document.getElementById('userInput').value;
-        const apiKey = "2b13c8a5466f467bbe7c4086352f268a"; // مفتاحك الجديد
-        const voiceId = "pMsXg95S2nO50Z47XQpM"; // صوت Roger الاحترافي
+    function updateCount() {
+        document.getElementById('count').innerText = document.getElementById('textInput').value.length;
+    }
 
-        if (!text) { alert("من فضلك اكتب نصاً أولاً"); return; }
+    async function generateSpeech() {
+        const text = document.getElementById('textInput').value;
+        const btn = document.getElementById('genBtn');
+        const apiKey = "2b13c8a5466f467bbe7c4086352f268a"; // مفتاحك الفعال
+        const voiceId = "pMsXg95S2nO50Z47XQpM"; // صوت Roger
+
+        if (!text) { alert("يرجى كتابة نص أولاً"); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحويل...';
 
         try {
             const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
@@ -46,13 +79,24 @@
             if (response.ok) {
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
-                document.getElementById('audioContainer').innerHTML = `<audio controls autoplay src="${url}"></audio>`;
+                document.getElementById('resultArea').style.display = 'block';
+                document.getElementById('audioPlaceholder').innerHTML = `<audio controls src="${url}"></audio>`;
+                document.getElementById('transcriptionText').innerText = text;
             } else {
-                alert("حدث خطأ! تأكد من الرصيد أو مفتاح API.");
+                alert("خطأ في الرصيد أو المفتاح. تأكد من حساب ElevenLabs.");
             }
-        } catch (error) {
-            alert("فشل الاتصال بالخدمة");
+        } catch (e) {
+            alert("فشل الاتصال بالخادم");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic"></i> تحويل إلى صوت';
         }
+    }
+
+    function copyText() {
+        const text = document.getElementById('transcriptionText').innerText;
+        navigator.clipboard.writeText(text);
+        alert("تم نسخ النص!");
     }
 </script>
 
