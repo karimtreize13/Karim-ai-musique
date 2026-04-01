@@ -3,91 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARIMTREIZE13 AI - Free Voice</title>
+    <title>KARIMTREIZE13 AI</title>
     <style>
-        :root { --primary: #00d282; --dark: #1a1a1a; --yellow: #ffc107; }
-        body { background-color: #f4f7f6; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: white; border-radius: 20px; width: 90%; max-width: 400px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .logo { font-size: 26px; font-weight: bold; margin-bottom: 20px; }
+        :root { --primary: #00d282; --yellow: #ffc107; }
+        body { background-color: #f8f9fa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; border-radius: 20px; width: 90%; max-width: 400px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+        .logo { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
         .logo span { color: var(--yellow); }
-        .box { background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: right; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #555; }
-        textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; outline: none; resize: none; }
+        .box { background: #fdfdfd; border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 15px; text-align: right; }
+        textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; outline: none; resize: none; text-align: center; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; }
         
-        /* شريط التحميل والنقاط */
-        .loading-area { display: none; margin: 20px 0; }
-        .dots { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
-        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse 1.5s infinite; }
+        /* النقاط المتحركة */
+        .loading { display: none; margin: 20px 0; }
+        .dots { display: flex; justify-content: center; gap: 5px; }
+        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; animation: pulse 1s infinite; }
         .dot:nth-child(2) { animation-delay: 0.2s; }
         .dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
-
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.3s; }
-        .btn:hover { background: #00b972; }
-        
-        audio { width: 100%; margin-top: 15px; display: none; }
-        .download-btn { display: none; margin-top: 15px; padding: 12px; background: var(--dark); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 15px; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="logo">KARIM<span>TREIZE13</span> AI</div>
-    <p style="color: #888; font-size: 12px; margin-bottom: 20px;">تحويل النص إلى صوت (مجاني للأبد) 🚀</p>
-
     <div class="box">
-        <label>اكتب النص المراد تحويله:</label>
-        <textarea id="textInput" rows="4" placeholder="مثال: مرحباً بكم في موقع كريم..."></textarea>
+        <textarea id="textInput" rows="4" placeholder="اكتب النص هنا..."></textarea>
     </div>
 
-    <button id="genBtn" class="btn" onclick="generateFreeVoice()">تحويل الآن ✨</button>
+    <button id="genBtn" class="btn" onclick="speak()">توليد الصوت ✨</button>
 
-    <div id="loading" class="loading-area">
+    <div id="loading" class="loading">
         <div class="dots">
             <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
-        <div style="font-size: 13px; color: #777;">جاري معالجة الصوت مجاناً...</div>
+        <p style="font-size: 12px; color: #888; margin-top: 10px;">جاري تشغيل الصوت الآن...</p>
     </div>
-
-    <audio id="player" controls></audio>
-    <a id="download" class="download-btn" target="_blank">تحميل الملف الصوتي 📥</a>
 </div>
 
 <script>
-    function generateFreeVoice() {
+    function speak() {
         const text = document.getElementById('textInput').value;
         const btn = document.getElementById('genBtn');
         const loading = document.getElementById('loading');
-        const player = document.getElementById('player');
-        const download = document.getElementById('download');
 
-        if (!text) {
-            alert("يرجى كتابة نص أولاً!");
-            return;
-        }
+        if (!text) return alert("يرجى كتابة نص!");
 
-        // إظهار أنميشن التحميل
+        // إخفاء الزر وإظهار التحميل
         btn.style.display = "none";
         loading.style.display = "block";
-        player.style.display = "none";
-        download.style.display = "none";
 
-        // استخدام محرك جوجل المجاني (بدون API Key)
-        const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ar&client=tw-ob`;
+        // إيقاف أي صوت شغال حالياً
+        window.speechSynthesis.cancel();
 
-        // محاكاة وقت المعالجة ليعطي شكلاً احترافياً
-        setTimeout(() => {
-            loading.style.display = "none";
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA'; // تحديد اللغة العربية
+        utterance.rate = 0.9;     // سرعة الكلام
+
+        // عند الانتهاء من الكلام
+        utterance.onend = function() {
             btn.style.display = "block";
-            
-            player.src = googleTtsUrl;
-            player.style.display = "block";
-            player.play();
+            loading.style.display = "none";
+        };
 
-            // تفعيل زر التحميل
-            download.href = googleTtsUrl;
-            download.style.display = "inline-block";
-        }, 1500); // الانتظار لمدة ثانية ونصف فقط
+        // عند حدوث خطأ
+        utterance.onerror = function() {
+            btn.style.display = "block";
+            loading.style.display = "none";
+            alert("حدث خطأ في تشغيل الصوت على متصفحك.");
+        };
+
+        // تشغيل النطق
+        window.speechSynthesis.speak(utterance);
     }
 </script>
 
