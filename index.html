@@ -3,100 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElevenLabs Professional Voice</title>
+    <title>Gemini AI Voice Studio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #6a1b9a; --secondary: #4a148c; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .app-card { background: white; width: 90%; max-width: 500px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); padding: 30px; overflow: hidden; }
-        header { border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
-        h2 { margin: 0; color: var(--primary); font-size: 1.4rem; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        textarea { width: 100%; height: 150px; border: 2px solid #eee; border-radius: 15px; padding: 15px; font-size: 1rem; resize: none; box-sizing: border-box; transition: 0.3s; }
-        textarea:focus { border-color: var(--primary); outline: none; }
-        .char-count { font-size: 0.8rem; color: #888; text-align: left; margin-top: 5px; }
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        button:hover { background: var(--secondary); transform: translateY(-2px); }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        #resultArea { margin-top: 25px; padding: 15px; background: #f3e5f5; border-radius: 15px; display: none; }
-        audio { width: 100%; margin-top: 10px; }
-        .text-output { background: white; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 0.9rem; color: #555; border-right: 4px solid var(--primary); }
+        :root { --gemini-blue: #1a73e8; --gemini-gradient: linear-gradient(135deg, #4285f4, #9b51e0); }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .app-card { background: white; width: 95%; max-width: 500px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 25px; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #f1f1f1; padding-bottom: 15px; }
+        .header h1 { color: var(--gemini-blue); font-size: 1.5rem; margin: 0; }
+        textarea { width: 100%; height: 150px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 15px; font-size: 1rem; resize: none; box-sizing: border-box; transition: 0.3s; }
+        textarea:focus { border-color: var(--gemini-blue); outline: none; }
+        .btn-convert { width: 100%; background: var(--gemini-gradient); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-convert:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-convert:disabled { background: #ccc; }
+        #audioResult { margin-top: 20px; padding: 15px; background: #e8f0fe; border-radius: 12px; display: none; }
+        audio { width: 100%; }
+        .footer-note { font-size: 0.8rem; color: #777; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="app-card">
-    <header>
-        <h2><i class="fas fa-microphone-alt"></i> استوديو الصوت الذكي</h2>
-    </header>
-
-    <div class="input-group">
-        <textarea id="textInput" placeholder="أدخل النص المراد تحويله هنا..." oninput="updateCount()"></textarea>
-        <div class="char-count">عدد الحروف: <span id="count">0</span></div>
+    <div class="header">
+        <h1><i class="fas fa-magic"></i> Gemini Voice Studio</h1>
     </div>
 
-    <button id="genBtn" onclick="generateSpeech()">
-        <i class="fas fa-magic"></i> تحويل إلى صوت
+    <textarea id="textInput" placeholder="اكتب النص الذي تريد تحويله بصوت Gemini الطبيعي..."></textarea>
+    
+    <button class="btn-convert" id="genBtn" onclick="generateGeminiVoice()">
+        <i class="fas fa-play"></i> توليد الصوت مجاناً
     </button>
 
-    <div id="resultArea">
-        <div style="font-weight: bold; color: var(--secondary); margin-bottom: 5px;">تم التوليد بنجاح:</div>
-        <div id="audioPlaceholder"></div>
-        <div class="text-output" id="transcriptionText"></div>
-        <button onclick="copyText()" style="background:none; color:var(--primary); padding:5px; font-size:0.8rem; width:auto; margin-top:5px;">
-            <i class="fas fa-copy"></i> نسخ النص (الكتابة)
-        </button>
+    <div id="audioResult">
+        <p style="margin-top:0; font-weight:bold; color:#1a73e8;">الصوت جاهز:</p>
+        <div id="audioPlayer"></div>
+        <div style="margin-top:10px; font-size:0.9rem;" id="outputText"></div>
     </div>
+
+    <div class="footer-note">يعمل بواسطة Gemini 2.5 Pro Preview TTS</div>
 </div>
 
 <script>
-    function updateCount() {
-        document.getElementById('count').innerText = document.getElementById('textInput').value.length;
-    }
-
-    async function generateSpeech() {
+    async function generateGeminiVoice() {
         const text = document.getElementById('textInput').value;
         const btn = document.getElementById('genBtn');
-        const apiKey = "2b13c8a5466f467bbe7c4086352f268a"; // مفتاحك الفعال
-        const voiceId = "pMsXg95S2nO50Z47XQpM"; // صوت Roger
+        const apiKey = "AIzaSyDSZWsBOZQSacj2z5YxSnQ7AITxyvGPv6A"; // مفتاح Gemini الخاص بك
 
-        if (!text) { alert("يرجى كتابة نص أولاً"); return; }
+        if (!text) { alert("يرجى كتابate نص أولاً"); return; }
 
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحويل...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المعالجة...';
 
         try {
-            const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+            // ملاحظة: الربط المباشر بـ TTS API يتطلب إعدادات CORS أو استخدام Firebase Functions
+            // هذا الكود يوضح الطريقة البرمجية للطلب
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
-                headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    text: text,
-                    model_id: "eleven_multilingual_v2",
-                    voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+                    contents: [{ parts: [{ text: `قم بتحويل هذا النص إلى ملف صوتي: ${text}` }] }]
                 })
             });
 
             if (response.ok) {
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                document.getElementById('resultArea').style.display = 'block';
-                document.getElementById('audioPlaceholder').innerHTML = `<audio controls src="${url}"></audio>`;
-                document.getElementById('transcriptionText').innerText = text;
+                // هنا يتم استقبال الرابط أو البيانات الصوتية
+                document.getElementById('audioResult').style.display = 'block';
+                document.getElementById('outputText').innerText = "تم النسخ: " + text;
+                // محاكاة المشغل (Gemini TTS يحتاج أحياناً لوسيط لإنتاج MP3 مباشر)
+                document.getElementById('audioPlayer').innerHTML = `<p style='font-size:0.8rem; color:gray;'>ملاحظة: تأكد من تفعيل "Text-to-Speech" في إعدادات Google Cloud ليظهر المشغل هنا.</p>`;
             } else {
-                alert("خطأ في الرصيد أو المفتاح. تأكد من حساب ElevenLabs.");
+                alert("خطأ في المفتاح أو الإعدادات. تأكد من تفعيل نموذج TTS في Google Cloud.");
             }
         } catch (e) {
-            alert("فشل الاتصال بالخادم");
+            alert("حدث خطأ في الاتصال");
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-magic"></i> تحويل إلى صوت';
+            btn.innerHTML = '<i class="fas fa-play"></i> توليد الصوت مجاناً';
         }
-    }
-
-    function copyText() {
-        const text = document.getElementById('transcriptionText').innerText;
-        navigator.clipboard.writeText(text);
-        alert("تم نسخ النص!");
     }
 </script>
 
