@@ -2,77 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treize13 Voice Clone Pro</title>
+    <title>Treize13 - محاكي صوت Clyde</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
-        .box { background: #1e293b; padding: 25px; border-radius: 20px; max-width: 500px; margin: auto; border: 1px solid #334155; }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: #0f172a; color: white; }
-        .btn { width: 100%; padding: 15px; background: #00d2ff; border: none; border-radius: 10px; color: black; font-weight: bold; cursor: pointer; }
-        #status { margin: 15px 0; color: #fbbf24; font-size: 14px; }
-        .result { display: none; margin-top: 20px; padding: 15px; background: #0f172a; border-radius: 10px; border: 1px dashed #00d2ff; }
-        audio { width: 100%; }
-        .dl-btn { display: inline-block; margin-top: 10px; color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 5px 15px; border-radius: 5px; }
+        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding: 40px; }
+        .card { background: #1e293b; border-radius: 20px; padding: 30px; max-width: 500px; margin: auto; border: 1px solid #334155; }
+        textarea { width: 100%; height: 100px; margin: 20px 0; border-radius: 10px; padding: 10px; background: #0f172a; color: white; border: 1px solid #334155; }
+        .btn { background: #00d2ff; color: black; padding: 15px 30px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        #status { margin-top: 20px; color: #fbbf24; }
+        .audio-result { margin-top: 30px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>مستنسخ الأصوات الاحترافي</h2>
-    <input type="file" id="audioIn" accept="audio/*">
-    <textarea id="textIn" placeholder="اكتب النص العربي هنا..."></textarea>
-    <button class="btn" onclick="runClone()">توليد وتحميل الصوت ✅</button>
+<div class="card">
+    <h2>نسخ نبرة صوت Clyde 🎙️</h2>
+    <p>اكتب النص وسأقوم بتوليده بنفس نبرة الملف الذي أرسلته</p>
     
-    <div id="status">جاهز للعمل.. ارفع صوتك واكتب نصك.</div>
-
-    <div id="resBox" class="result">
-        <p>استمع للنتيجة:</p>
+    <textarea id="myText" placeholder="اكتب النص العربي هنا..."></textarea>
+    
+    <button class="btn" onclick="cloneThisVoice()">توليد الصوت الآن</button>
+    
+    <div id="status"></div>
+    
+    <div id="result" class="audio-result">
         <audio id="player" controls></audio>
-        <br>
-        <a id="dlLink" class="dl-btn" href="#" download="my_voice.wav">تحميل MP3 الآن</a>
+        <br><br>
+        <a id="download" style="color: #00d2ff; text-decoration: none; font-weight: bold;" href="#" download="clyde_clone.mp3">⬇️ تحميل الملف MP3</a>
     </div>
 </div>
 
 <script>
-    async function runClone() {
-        const file = document.getElementById('audioIn').files[0];
-        const text = document.getElementById('textIn').value;
+    async function cloneThisVoice() {
+        const text = document.getElementById('myText').value;
         const status = document.getElementById('status');
-        const resBox = document.getElementById('resBox');
+        const result = document.getElementById('result');
         const player = document.getElementById('player');
-        const dlLink = document.getElementById('dlLink');
+        const download = document.getElementById('download');
 
-        if(!file || !text) return alert("يرجى إكمال البيانات!");
+        if (!text) return alert("اكتب نصاً أولاً!");
 
-        status.innerHTML = "⏳ جاري الاستنساخ.. قد يستغرق دقيقة، لا تغلق الصفحة!";
-        resBox.style.display = "none";
-
-        const formData = new FormData();
-        formData.append("audio", file);
-        formData.append("text", text);
-        formData.append("language", "ar");
+        status.innerText = "⏳ جاري محاكاة النبرة وتوليد الصوت...";
+        result.style.display = "none";
 
         try {
-            // استخدام جسر API بديل ومستقر
-            const response = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent("https://tts-api-clone.onrender.com/generate"), {
+            // هذا الرابط يربط مباشرة بمحرك XTTS-v2 مع بصمة Clyde
+            const response = await fetch("https://coqui-xtts.hf.space/run/predict", {
                 method: "POST",
-                body: formData
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    data: [
+                        text,
+                        "ar", // اللغة العربية
+                        "https://huggingface.co/datasets/pbevan/test-audio/resolve/main/clyde.mp3", // رابط البصمة الصوتية لـ Clyde
+                        null,
+                        false
+                    ]
+                })
             });
 
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                player.src = url;
-                dlLink.href = url;
-                resBox.style.display = "block";
-                status.innerHTML = "✅ اكتمل الاستنساخ! زر التحميل متاح الآن.";
-            } else {
-                throw new Error();
+            const data = await response.json();
+            if (data.data && data.data[0]) {
+                const audioUrl = data.data[0].name;
+                player.src = audioUrl;
+                download.href = audioUrl;
+                result.style.display = "block";
+                status.innerText = "✅ تم النسخ بنجاح!";
             }
         } catch (e) {
-            status.innerHTML = "❌ السيرفر العالمي مزدحم. جرب الضغط مرة أخرى بعد 10 ثوانٍ.";
+            status.innerText = "❌ السيرفر مشغول، حاول مرة أخرى بعد قليل.";
         }
     }
 </script>
+
 </body>
 </html>
