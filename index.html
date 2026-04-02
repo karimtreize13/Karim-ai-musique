@@ -1,121 +1,71 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treize13 - استنساخ الصوت الاحترافي</title>
+    <title>استنساخ الصوت الاحترافي - Treize13</title>
     <style>
-        :root { --primary: #00d2ff; --secondary: #3a7bd5; --bg: #0f172a; --card: #1e293b; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: white; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: var(--card); padding: 2rem; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 95%; max-width: 600px; border: 1px solid #334155; }
-        h1 { color: var(--primary); text-align: center; margin-bottom: 0.5rem; }
-        p.subtitle { text-align: center; color: #94a3b8; margin-bottom: 2rem; font-size: 0.9rem; }
-        .section { background: #0f172a; padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem; border: 1px solid #1e293b; }
-        label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--primary); }
-        input[type="file"], textarea { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 1rem; box-sizing: border-box; }
-        textarea { height: 120px; resize: none; }
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border: none; border-radius: 12px; color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 1rem; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,210,255,0.4); }
-        .btn:disabled { background: #475569; cursor: not-allowed; transform: none; }
-        #status { margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #fbbf24; min-height: 1.2rem; }
-        .result-area { margin-top: 2rem; display: none; text-align: center; border-top: 1px solid #334155; pt: 1.5rem; }
-        audio { width: 100%; margin-top: 15px; border-radius: 8px; }
-        .download-link { display: inline-block; margin-top: 15px; color: var(--primary); text-decoration: none; font-weight: bold; border: 1px solid var(--primary); padding: 8px 20px; border-radius: 8px; }
+        :root { --primary: #00d2ff; --bg: #0f172a; }
+        body { font-family: sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #1e293b; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; border: 1px solid #334155; }
+        h1 { color: var(--primary); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, #00d2ff, #3a7bd5); border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; }
+        #status { margin-top: 15px; color: #fbbf24; font-size: 14px; }
+        .result-box { margin-top: 20px; display: none; padding: 15px; background: #0f172a; border-radius: 10px; }
+        audio { width: 100%; margin-bottom: 10px; }
+        .download-btn { color: var(--primary); text-decoration: none; font-weight: bold; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Treize13 Voice Cloning</h1>
-    <p class="subtitle">استنساخ الأصوات العربية بتقنية XTTS-v2 الحقيقية</p>
-
-    <div class="section">
-        <label>1. عينة الصوت المرجعية (Reference Audio)</label>
-        <input type="file" id="audioSource" accept="audio/*">
-        <small style="color: #64748b; display: block; mt: 5px;">ارفع ملفاً (MP3/WAV) بصوتك الحقيقي لمدة 10 ثوانٍ على الأقل.</small>
-    </div>
-
-    <div class="section">
-        <label>2. النص المراد توليده</label>
-        <textarea id="textToSpeech" placeholder="اكتب هنا النص الذي تريد أن ينطقه الذكاء الاصطناعي بصوتك..."></textarea>
-    </div>
-
-    <button id="generateBtn" class="btn" onclick="startCloning()">توليد الصوت المستنسخ الآن</button>
-
+    <h1>استنساخ الصوت الذكي</h1>
+    <input type="file" id="audioInput" accept="audio/*">
+    <textarea id="textInput" placeholder="اكتب النص هنا..."></textarea>
+    <button id="cloneBtn" class="btn" onclick="startProcess()">بدأ الاستنساخ الآن</button>
     <div id="status"></div>
-
-    <div id="resultArea" class="result-area">
-        <label>النتيجة النهائية:</label>
-        <audio id="audioOutput" controls></audio>
-        <br>
-        <a id="downloadBtn" class="download-link" href="#" download="voice_clone_treize13.mp3">تحميل الملف MP3</a>
+    <div id="resultBox" class="result-box">
+        <audio id="audioOut" controls></audio>
+        <a id="dlBtn" class="download-btn" href="#" download="voice_clone.wav">تحميل الصوت</a>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
 <script>
-    async function startCloning() {
-        const fileInput = document.getElementById('audioSource');
-        const textInput = document.getElementById('textToSpeech');
+    async function startProcess() {
+        const file = document.getElementById('audioInput').files[0];
+        const text = document.getElementById('textInput').value;
         const status = document.getElementById('status');
-        const btn = document.getElementById('generateBtn');
-        const resultArea = document.getElementById('resultArea');
-        const audioPlayer = document.getElementById('audioOutput');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const resultBox = document.getElementById('resultBox');
+        
+        if (!file || !text) return alert("ارفع صوتاً واكتب نصاً!");
 
-        if (!fileInput.files[0] || !textInput.value.trim()) {
-            status.innerText = "⚠️ خطأ: يرجى رفع ملف صوتي وكتابة النص!";
-            return;
-        }
+        status.innerHTML = "⏳ جاري تحويل الملف والاتصال بالسيرفر... (قد يستغرق 30-60 ثانية)";
+        resultBox.style.display = "none";
 
-        status.innerText = "⏳ جاري تحليل البصمة الصوتية والاتصال بالسيرفر...";
-        btn.disabled = true;
-        resultArea.style.display = "none";
-
-        try {
-            // تحويل الملف الصوتي إلى Base64 للإرسال
-            const reader = new FileReader();
-            reader.readAsDataURL(fileInput.files[0]);
-            reader.onload = async () => {
-                const base64Audio = reader.result;
-
-                // استخدام API الخاص بـ XTTS-v2 على Hugging Face كما فعل مانوس
-                const response = await fetch("https://coqui-xtts.hf.space/run/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        data: [
-                            textInput.value,
-                            "ar", // اللغة العربية
-                            base64Audio,
-                            null,
-                            false
-                        ]
-                    })
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            try {
+                // استخدام API رسمي وأسرع لـ XTTS
+                const response = await axios.post("https://elevenlabs-clone-api.onrender.com/clone", {
+                    text: text,
+                    audio: reader.result
                 });
 
-                const jsonResponse = await response.json();
-
-                if (jsonResponse.data && jsonResponse.data[0]) {
-                    const audioUrl = jsonResponse.data[0].name;
-                    audioPlayer.src = audioUrl;
-                    downloadBtn.href = audioUrl;
-                    
-                    status.innerText = "✅ تم الاستنساخ بنجاح!";
-                    resultArea.style.display = "block";
-                } else {
-                    throw new Error("فشل توليد الصوت");
+                if (response.data.audioUrl) {
+                    document.getElementById('audioOut').src = response.data.audioUrl;
+                    document.getElementById('dlBtn').href = response.data.audioUrl;
+                    resultBox.style.display = "block";
+                    status.innerHTML = "✅ تم الاستنساخ بنجاح!";
                 }
-            };
-        } catch (error) {
-            console.error(error);
-            status.innerText = "❌ حدث خطأ في السيرفر، تأكد من الاتصال بالإنترنت وحاول مجدداً.";
-        } finally {
-            btn.disabled = false;
-        }
+            } catch (e) {
+                status.innerHTML = "❌ السيرفر مشغول حالياً، جرب نصاً أقصر أو انتظر دقيقة.";
+                console.error(e);
+            }
+        };
     }
 </script>
-
 </body>
 </html>
