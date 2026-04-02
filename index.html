@@ -2,77 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Treize13 - محاكي صوت Clyde</title>
+    <title>Treize13 - MiniMax Voice Interface</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding: 40px; }
-        .card { background: #1e293b; border-radius: 20px; padding: 30px; max-width: 500px; margin: auto; border: 1px solid #334155; }
-        textarea { width: 100%; height: 100px; margin: 20px 0; border-radius: 10px; padding: 10px; background: #0f172a; color: white; border: 1px solid #334155; }
-        .btn { background: #00d2ff; color: black; padding: 15px 30px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
-        #status { margin-top: 20px; color: #fbbf24; }
-        .audio-result { margin-top: 30px; display: none; }
+        body { font-family: sans-serif; background: #0b0f19; color: white; text-align: center; padding: 50px; }
+        .container { background: #161b22; padding: 30px; border-radius: 15px; max-width: 500px; margin: auto; border: 1px solid #30363d; }
+        textarea { width: 100%; height: 120px; background: #0d1117; color: white; border: 1px solid #30363d; padding: 10px; border-radius: 8px; margin: 20px 0; }
+        .btn { background: #238636; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
+        #loader { display: none; margin-top: 15px; color: #8b949e; }
+        audio { width: 100%; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>نسخ نبرة صوت Clyde 🎙️</h2>
-    <p>اكتب النص وسأقوم بتوليده بنفس نبرة الملف الذي أرسلته</p>
+<div class="container">
+    <h2>واجهة استنساخ الصوت (MiniMax)</h2>
+    <p>سيتم توليد الصوت بنبرة Clyde الاحترافية</p>
     
-    <textarea id="myText" placeholder="اكتب النص العربي هنا..."></textarea>
+    <textarea id="inputText" placeholder="اكتب النص هنا للتحويل لصوت..."></textarea>
     
-    <button class="btn" onclick="cloneThisVoice()">توليد الصوت الآن</button>
+    <button class="btn" onclick="generateAudio()">توليد الصوت عبر MiniMax</button>
     
-    <div id="status"></div>
+    <div id="loader">⏳ جاري الاتصال بحسابك في MiniMax...</div>
     
-    <div id="result" class="audio-result">
-        <audio id="player" controls></audio>
-        <br><br>
-        <a id="download" style="color: #00d2ff; text-decoration: none; font-weight: bold;" href="#" download="clyde_clone.mp3">⬇️ تحميل الملف MP3</a>
-    </div>
+    <audio id="audioResult" controls></audio>
 </div>
 
 <script>
-    async function cloneThisVoice() {
-        const text = document.getElementById('myText').value;
-        const status = document.getElementById('status');
-        const result = document.getElementById('result');
-        const player = document.getElementById('player');
-        const download = document.getElementById('download');
+    async function generateAudio() {
+        const text = document.getElementById('inputText').value;
+        const loader = document.getElementById('loader');
+        const audio = document.getElementById('audioResult');
 
-        if (!text) return alert("اكتب نصاً أولاً!");
+        if (!text) return alert("يرجى كتابة نص!");
 
-        status.innerText = "⏳ جاري محاكاة النبرة وتوليد الصوت...";
-        result.style.display = "none";
+        loader.style.display = "block";
+        audio.style.display = "none";
 
         try {
-            // هذا الرابط يربط مباشرة بمحرك XTTS-v2 مع بصمة Clyde
-            const response = await fetch("https://coqui-xtts.hf.space/run/predict", {
+            // ملاحظة: يجب وضع الـ API Key الخاص بك هنا ليعمل الربط
+            const response = await fetch("https://api.minimax.chat/v1/text_to_speech", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Authorization": "Bearer YOUR_MINIMAX_API_KEY", // ضع مفتاحك هنا
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
-                    data: [
-                        text,
-                        "ar", // اللغة العربية
-                        "https://huggingface.co/datasets/pbevan/test-audio/resolve/main/clyde.mp3", // رابط البصمة الصوتية لـ Clyde
-                        null,
-                        false
-                    ]
+                    "voice_id": "clyde_pro_13", // معرف صوت Clyde
+                    "text": text,
+                    "model": "speech-01"
                 })
             });
 
-            const data = await response.json();
-            if (data.data && data.data[0]) {
-                const audioUrl = data.data[0].name;
-                player.src = audioUrl;
-                download.href = audioUrl;
-                result.style.display = "block";
-                status.innerText = "✅ تم النسخ بنجاح!";
+            const result = await response.json();
+            if (result.audio_url) {
+                audio.src = result.audio_url;
+                audio.style.display = "block";
+                loader.style.display = "none";
             }
-        } catch (e) {
-            status.innerText = "❌ السيرفر مشغول، حاول مرة أخرى بعد قليل.";
+        } catch (error) {
+            alert("حدث خطأ في الربط، تأكد من مفتاح الـ API");
+            loader.style.display = "none";
         }
     }
 </script>
-
 </body>
 </html>
