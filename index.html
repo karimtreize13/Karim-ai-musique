@@ -2,68 +2,98 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Treize13 - MiniMax Voice Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karim Treize - Voice Cloner</title>
     <style>
-        body { font-family: sans-serif; background: #0b0f19; color: white; text-align: center; padding: 50px; }
-        .container { background: #161b22; padding: 30px; border-radius: 15px; max-width: 500px; margin: auto; border: 1px solid #30363d; }
-        textarea { width: 100%; height: 120px; background: #0d1117; color: white; border: 1px solid #30363d; padding: 10px; border-radius: 8px; margin: 20px 0; }
-        .btn { background: #238636; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
-        #loader { display: none; margin-top: 15px; color: #8b949e; }
-        audio { width: 100%; margin-top: 20px; display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; text-align: center; padding: 20px; }
+        .main-card { background: #1e293b; max-width: 600px; margin: 40px auto; padding: 30px; border-radius: 25px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: #00d2ff; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; }
+        textarea { width: 100%; height: 120px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; padding: 15px; font-size: 16px; margin: 20px 0; resize: none; text-align: right; }
+        .action-btn { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 15px 40px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; font-size: 18px; }
+        .action-btn:hover { opacity: 0.9; transform: scale(0.98); }
+        #status { margin: 15px 0; color: #fbbf24; font-weight: bold; }
+        .result-box { display: none; margin-top: 25px; padding: 20px; background: #0f172a; border-radius: 15px; border: 1px dashed #00d2ff; }
+        audio { width: 100%; margin-bottom: 15px; }
+        .download-link { display: inline-block; background: #22c55e; color: white; text-decoration: none; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>واجهة استنساخ الصوت (MiniMax)</h2>
-    <p>سيتم توليد الصوت بنبرة Clyde الاحترافية</p>
+<div class="main-card">
+    <h1>استنساخ الصوت الذكي 🎙️</h1>
+    <p>سيتم توليد النص بنبرة "Clyde" الاحترافية</p>
+
+    <textarea id="textInput" placeholder="اكتب النص الذي تريد تحويله إلى صوت هنا..."></textarea>
     
-    <textarea id="inputText" placeholder="اكتب النص هنا للتحويل لصوت..."></textarea>
-    
-    <button class="btn" onclick="generateAudio()">توليد الصوت عبر MiniMax</button>
-    
-    <div id="loader">⏳ جاري الاتصال بحسابك في MiniMax...</div>
-    
-    <audio id="audioResult" controls></audio>
+    <button id="generateBtn" class="action-btn" onclick="startCloning()">بدء توليد الصوت الآن</button>
+
+    <div id="status"></div>
+
+    <div id="resultBox" class="result-box">
+        <p style="color: #00d2ff; margin-top: 0;">النتيجة جاهزة للاستماع والتحميل:</p>
+        <audio id="audioPlayer" controls></audio>
+        <br>
+        <a id="downloadBtn" class="download-link" href="#" download="karim_treize_voice.wav">⬇️ تحميل الملف MP3</a>
+    </div>
 </div>
 
 <script>
-    async function generateAudio() {
-        const text = document.getElementById('inputText').value;
-        const loader = document.getElementById('loader');
-        const audio = document.getElementById('audioResult');
+    async function startCloning() {
+        const text = document.getElementById('textInput').value;
+        const status = document.getElementById('status');
+        const resultBox = document.getElementById('resultBox');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const btn = document.getElementById('generateBtn');
 
-        if (!text) return alert("يرجى كتابة نص!");
+        if (!text) {
+            alert("يرجى كتابة نص أولاً!");
+            return;
+        }
 
-        loader.style.display = "block";
-        audio.style.display = "none";
+        // إعداد الواجهة لبدء العمل
+        status.innerText = "⏳ جاري محاكاة النبرة وتوليد الملف (قد يستغرق 30-60 ثانية)...";
+        btn.disabled = true;
+        resultBox.style.display = "none";
 
         try {
-            // ملاحظة: يجب وضع الـ API Key الخاص بك هنا ليعمل الربط
-            const response = await fetch("https://api.minimax.chat/v1/text_to_speech", {
+            // الاتصال بمحرك XTTS-v2 المجاني مع بصمة صوت Clyde
+            const response = await fetch("https://coqui-xtts.hf.space/run/predict", {
                 method: "POST",
-                headers: {
-                    "Authorization": "Bearer YOUR_MINIMAX_API_KEY", // ضع مفتاحك هنا
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    "voice_id": "clyde_pro_13", // معرف صوت Clyde
-                    "text": text,
-                    "model": "speech-01"
+                    data: [
+                        text, // النص العربي
+                        "ar", // اللغة
+                        "https://huggingface.co/datasets/pbevan/test-audio/resolve/main/clyde.mp3", // رابط ملف البصمة الصوتية (Clyde)
+                        null,
+                        false
+                    ]
                 })
             });
 
-            const result = await response.json();
-            if (result.audio_url) {
-                audio.src = result.audio_url;
-                audio.style.display = "block";
-                loader.style.display = "none";
+            const json = await response.json();
+            
+            if (json.data && json.data[0]) {
+                const audioUrl = json.data[0].name;
+                audioPlayer.src = audioUrl;
+                downloadBtn.href = audioUrl;
+                
+                status.innerText = "✅ تم استنساخ الصوت بنجاح!";
+                resultBox.style.display = "block";
+            } else {
+                throw new Error("لم يتم استلام ملف صوتي");
             }
+
         } catch (error) {
-            alert("حدث خطأ في الربط، تأكد من مفتاح الـ API");
-            loader.style.display = "none";
+            console.error(error);
+            status.innerText = "❌ السيرفر مشغول حالياً بسبب الضغط العالمي. يرجى المحاولة مرة أخرى بعد دقيقة.";
+        } finally {
+            btn.disabled = false;
         }
     }
 </script>
+
 </body>
 </html>
