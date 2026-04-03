@@ -3,66 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARIM 14 VOICE | AI CLONING</title>
+    <title>Karim Tlm | AI Voice</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00f2fe; --main-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); --bg: #0b0f19; }
+        :root { --accent: #00f2fe; --main-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); --bg: #0b1120; }
         body { background-color: var(--bg); color: #ffffff; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .app-card { background: #161b2c; border: 1px solid #2d334a; border-radius: 30px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
-        .app-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--main-grad); }
-        h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 5px; background: var(--main-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .version { font-size: 0.8rem; background: #2d334a; color: var(--accent); padding: 2px 10px; border-radius: 20px; display: inline-block; margin-bottom: 20px; }
-        .field-group { text-align: right; margin-bottom: 22px; }
-        label { display: block; margin-bottom: 10px; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; background: #0b0f19; border: 1px solid #2d334a; color: white; padding: 14px; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; }
-        input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
-        .main-btn { background: var(--main-grad); color: #0b0f19; border: none; padding: 20px; width: 100%; border-radius: 18px; font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.4s; margin-top: 15px; }
+        .app-card { background: #1a2235; border: 1px solid #2d3748; border-radius: 25px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); text-align: center; border-bottom: 6px solid #00f2fe; position: relative; }
+        h1 { font-size: 2.8rem; font-weight: 900; margin: 0; background: var(--main-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; }
+        .version { font-size: 0.75rem; color: #a0aec0; letter-spacing: 3px; display: block; margin-bottom: 25px; }
+        .field-group { text-align: right; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; background: #0b1120; border: 1px solid #2d3748; color: white; padding: 14px; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; }
+        input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .main-btn { background: var(--main-grad); color: #0b1120; border: none; padding: 18px; width: 100%; border-radius: 15px; font-size: 1.25rem; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 15px; }
         .main-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4); }
-        .main-btn:disabled { background: #2d334a; color: #5d647a; cursor: not-allowed; transform: none; box-shadow: none; }
-        #status { margin-top: 25px; font-weight: 700; color: #4facfe; min-height: 30px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        .audio-container { margin-top: 30px; display: none; background: #0b0f19; padding: 20px; border-radius: 20px; border: 1px dashed var(--accent); }
-        audio { width: 100%; height: 45px; }
-        .footer { margin-top: 25px; font-size: 0.75rem; color: #5d647a; }
+        .main-btn:active { transform: translateY(0); }
+        #status { margin-top: 20px; font-weight: 700; color: #4facfe; min-height: 25px; }
+        .audio-container { margin-top: 30px; display: none; background: #0b1120; padding: 20px; border-radius: 20px; border: 2px dashed var(--accent); }
+        audio { width: 100%; height: 50px; margin-top: 10px; }
+        .footer { margin-top: 30px; font-size: 0.7rem; color: #4a5568; }
     </style>
 </head>
 <body>
 
 <div class="app-card">
-    <h1>KARIM 14</h1>
-    <div class="version">AI VOICE CLONE PRO</div>
+    <h1>KARIM TLM</h1>
+    <span class="version">ELITE AI VOICE SYSTEM</span>
 
     <div class="field-group">
-        <label>🎤 عينة الصوت المستهدفة:</label>
+        <label>🎙️ 1. ارفع عينة الصوت (WAV/MP3):</label>
         <input type="file" id="speakerInput" accept="audio/*">
     </div>
 
     <div class="field-group">
-        <label>📝 النص المراد توليده بصوتك:</label>
-        <textarea id="textInput" rows="3" placeholder="أهلاً بك، أنا كريم 14..."></textarea>
+        <label>📝 2. النص المراد نطقة بصوتك:</label>
+        <textarea id="textInput" rows="3" placeholder="أهلاً بك، معك كريم تلمسان..."></textarea>
     </div>
 
     <div class="field-group">
-        <label>🌐 لغة النطق:</label>
+        <label>🌐 3. اختر لغة النطق:</label>
         <select id="langInput">
             <option value="ar">العربية (Arabic)</option>
             <option value="en">الإنجليزية (English)</option>
             <option value="fr">الفرنسية (French)</option>
             <option value="tr">التركية (Turkish)</option>
-            <option value="es">الإسبانية (Spanish)</option>
         </select>
     </div>
 
-    <button id="runBtn" class="main-btn">توليد الصوت السحري 🚀</button>
+    <button id="runBtn" class="main-btn">توليد الصوت الآن 🚀</button>
     
-    <div id="status">جاهز للانطلاق</div>
+    <div id="status">جاهز للاستخدام</div>
 
     <div class="audio-container" id="audioBox">
-        <label style="text-align: center; display: block; margin-bottom: 10px;">🎧 النتيجة النهائية جاهزة:</label>
+        <label style="text-align:center; display:block;">🎧 استمع للنتيجة النهائية:</label>
         <audio id="audioPlayer" controls></audio>
     </div>
 
-    <div class="footer">تطوير كريم 14 © 2026 - جميع الحقوق محفوظة</div>
+    <div class="footer">تطوير كريم تلمسان © 2026 | الإصدار 14.1</div>
 </div>
 
 <script type="module">
@@ -73,19 +70,19 @@
     const audioBox = document.getElementById('audioBox');
     const audioPlayer = document.getElementById('audioPlayer');
 
-    // الإعدادات الخاصة بك مع المفتاح الجديد
+    // معلومات السيرفر والمفتاح الأخير
     const SPACE_ID = "karim-treize-13/xtts-voice-cloning";
-    const HF_TOKEN = "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";
+    const HF_TOKEN = "Hf_DnWYMJaPIQjbhCXedLRmwqmMLeTgPNCRmT";
 
     runBtn.onclick = async () => {
         const file = document.getElementById('speakerInput').files[0];
         const text = document.getElementById('textInput').value;
         const lang = document.getElementById('langInput').value;
 
-        if (!file || !text) return alert("يا كريم، يرجى رفع ملف الصوت وكتابة النص أولاً!");
+        if (!file || !text) return alert("يرجى ملء كافة البيانات يا كريم!");
 
         runBtn.disabled = true;
-        status.innerText = "⏳ جاري استنساخ الصوت في المختبر...";
+        status.innerText = "⏳ جاري استنساخ الصوت ببراعة...";
         audioBox.style.display = "none";
 
         try {
@@ -101,11 +98,11 @@
             if (result.data && result.data[0]) {
                 audioPlayer.src = result.data[0].url;
                 audioBox.style.display = "block";
-                status.innerText = "✅ تم التحويل بنجاح يا كريم!";
+                status.innerText = "✅ نجح الاستنساخ يا كريم Tlm!";
             }
         } catch (error) {
             console.error(error);
-            status.innerText = "❌ السيرفر لا يستجيب.. تأكد أنه يعمل (Running)";
+            status.innerText = "❌ حدث خطأ.. تأكد من حالة السيرفر.";
         } finally {
             runBtn.disabled = false;
         }
