@@ -3,108 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim 13 Voice | AI Clone</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>KARIM 14 VOICE | AI CLONING</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main-blue: #00d2ff; --dark-bg: #0f172a; --glass: rgba(30, 41, 59, 0.7); }
-        body { background: radial-gradient(circle at top, #1e293b, #0f172a); color: white; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
-        .container { background: var(--glass); backdrop-filter: blur(10px); padding: 40px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); width: 100%; max-width: 450px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
-        h1 { font-size: 2.2rem; background: linear-gradient(to right, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; font-weight: 700; }
-        .subtitle { color: #94a3b8; margin-bottom: 30px; font-size: 0.9rem; }
-        .input-card { background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: right; border: 1px solid rgba(255,255,255,0.05); }
-        label { display: block; margin-bottom: 10px; color: var(--main-blue); font-weight: bold; font-size: 0.85rem; }
-        input, select, textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; font-family: 'Cairo'; font-size: 1rem; transition: 0.3s; }
-        input:focus { border-color: var(--main-blue); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
-        .btn-glow { background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white; border: none; padding: 18px; width: 100%; border-radius: 16px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 20px -5px rgba(0, 210, 255, 0.4); }
-        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(0, 210, 255, 0.6); }
-        .btn-glow:disabled { background: #334155; transform: none; box-shadow: none; cursor: not-allowed; }
-        #status { margin-top: 20px; color: #38bdf8; font-weight: bold; min-height: 24px; }
-        audio { width: 100%; margin-top: 25px; border-radius: 10px; display: none; }
+        :root { --accent: #00f2fe; --main-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); --bg: #0b0f19; }
+        body { background-color: var(--bg); color: #ffffff; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .app-card { background: #161b2c; border: 1px solid #2d334a; border-radius: 30px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
+        .app-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--main-grad); }
+        h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 5px; background: var(--main-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        .version { font-size: 0.8rem; background: #2d334a; color: var(--accent); padding: 2px 10px; border-radius: 20px; display: inline-block; margin-bottom: 20px; }
+        .field-group { text-align: right; margin-bottom: 22px; }
+        label { display: block; margin-bottom: 10px; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; background: #0b0f19; border: 1px solid #2d334a; color: white; padding: 14px; border-radius: 15px; font-family: 'Cairo'; box-sizing: border-box; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+        .main-btn { background: var(--main-grad); color: #0b0f19; border: none; padding: 20px; width: 100%; border-radius: 18px; font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.4s; margin-top: 15px; }
+        .main-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4); }
+        .main-btn:disabled { background: #2d334a; color: #5d647a; cursor: not-allowed; transform: none; box-shadow: none; }
+        #status { margin-top: 25px; font-weight: 700; color: #4facfe; min-height: 30px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .audio-container { margin-top: 30px; display: none; background: #0b0f19; padding: 20px; border-radius: 20px; border: 1px dashed var(--accent); }
+        audio { width: 100%; height: 45px; }
+        .footer { margin-top: 25px; font-size: 0.75rem; color: #5d647a; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>KARIM 13 VOICE</h1>
-    <div class="subtitle">نظام الذكاء الاصطناعي لاستنساخ الأصوات</div>
+<div class="app-card">
+    <h1>KARIM 14</h1>
+    <div class="version">AI VOICE CLONE PRO</div>
 
-    <div class="input-card">
-        <label>🎙️ ارفع عينة الصوت (Reference):</label>
-        <input type="file" id="audio_ref" accept="audio/*">
+    <div class="field-group">
+        <label>🎤 عينة الصوت المستهدفة:</label>
+        <input type="file" id="speakerInput" accept="audio/*">
     </div>
 
-    <div class="input-card">
-        <label>📝 النص المراد توليده:</label>
-        <textarea id="text_to_gen" rows="3" placeholder="اكتب ما تريد قوله هنا..."></textarea>
+    <div class="field-group">
+        <label>📝 النص المراد توليده بصوتك:</label>
+        <textarea id="textInput" rows="3" placeholder="أهلاً بك، أنا كريم 14..."></textarea>
     </div>
 
-    <div class="input-card">
-        <label>🌍 لغة النطق:</label>
-        <select id="lang_select">
+    <div class="field-group">
+        <label>🌐 لغة النطق:</label>
+        <select id="langInput">
             <option value="ar">العربية (Arabic)</option>
             <option value="en">الإنجليزية (English)</option>
             <option value="fr">الفرنسية (French)</option>
             <option value="tr">التركية (Turkish)</option>
+            <option value="es">الإسبانية (Spanish)</option>
         </select>
     </div>
 
-    <button id="magic_btn" class="btn-glow">توليد الصوت السحري ✨</button>
+    <button id="runBtn" class="main-btn">توليد الصوت السحري 🚀</button>
     
-    <div id="status">جاهز للانطلاق...</div>
-    <audio id="audio_out" controls></audio>
+    <div id="status">جاهز للانطلاق</div>
+
+    <div class="audio-container" id="audioBox">
+        <label style="text-align: center; display: block; margin-bottom: 10px;">🎧 النتيجة النهائية جاهزة:</label>
+        <audio id="audioPlayer" controls></audio>
+    </div>
+
+    <div class="footer">تطوير كريم 14 © 2026 - جميع الحقوق محفوظة</div>
 </div>
 
-<script>
-    const API_URL = "https://karim-treize-13-xtts-voice-cloning.hf.space/run/predict";
-    const TOKEN = "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";
+<script type="module">
+    import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
-    const btn = document.getElementById('magic_btn');
+    const runBtn = document.getElementById('runBtn');
     const status = document.getElementById('status');
-    const player = document.getElementById('audio_out');
+    const audioBox = document.getElementById('audioBox');
+    const audioPlayer = document.getElementById('audioPlayer');
 
-    btn.onclick = async () => {
-        const file = document.getElementById('audio_ref').files[0];
-        const text = document.getElementById('text_to_gen').value;
-        const lang = document.getElementById('lang_select').value;
+    // الإعدادات الخاصة بك مع المفتاح الجديد
+    const SPACE_ID = "karim-treize-13/xtts-voice-cloning";
+    const HF_TOKEN = "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";
 
-        if(!file || !text) return alert("يرجى تعبئة كافة الحقول!");
+    runBtn.onclick = async () => {
+        const file = document.getElementById('speakerInput').files[0];
+        const text = document.getElementById('textInput').value;
+        const lang = document.getElementById('langInput').value;
 
-        btn.disabled = true;
-        status.innerText = "⏳ جاري استنساخ الصوت (قد يستغرق 30 ثانية)...";
-        player.style.display = "none";
+        if (!file || !text) return alert("يا كريم، يرجى رفع ملف الصوت وكتابة النص أولاً!");
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async () => {
-            const base64Audio = reader.result;
+        runBtn.disabled = true;
+        status.innerText = "⏳ جاري استنساخ الصوت في المختبر...";
+        audioBox.style.display = "none";
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${TOKEN}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        data: [text, lang, base64Audio, base64Audio, true]
-                    })
-                });
+        try {
+            const app = await client(SPACE_ID, { hf_token: HF_TOKEN });
+            const result = await app.predict("/predict", [
+                text, 
+                lang, 
+                file, 
+                file, 
+                true  
+            ]);
 
-                const json = await response.json();
-                if (json.data && json.data[0]) {
-                    // تصحيح مسار الملف الصوتي الناتج
-                    const fileName = json.data[0].name;
-                    player.src = `https://karim-treize-13-xtts-voice-cloning.hf.space/file=${fileName}`;
-                    player.style.display = "block";
-                    status.innerText = "✅ نجح الاستنساخ! استمتع بصوتك.";
-                } else {
-                    throw new Error("السيرفر لم يرسل ملفاً.");
-                }
-            } catch (err) {
-                status.innerText = "❌ خطأ في السيرفر. تأكد أن Hugging Face أخضر (Running).";
-                console.error(err);
-            } finally {
-                btn.disabled = false;
+            if (result.data && result.data[0]) {
+                audioPlayer.src = result.data[0].url;
+                audioBox.style.display = "block";
+                status.innerText = "✅ تم التحويل بنجاح يا كريم!";
             }
-        };
+        } catch (error) {
+            console.error(error);
+            status.innerText = "❌ السيرفر لا يستجيب.. تأكد أنه يعمل (Running)";
+        } finally {
+            runBtn.disabled = false;
+        }
     };
 </script>
+
 </body>
 </html>
