@@ -3,112 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim Tlm | استنساخ الصوت الذكي</title>
+    <title>Karim Tlm | استنساخ الصوت</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00f2fe; --grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); --bg: #0b1120; }
-        body { background-color: var(--bg); color: #ffffff; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .app-card { background: #1a2235; border: 1px solid #2d3748; border-radius: 30px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); text-align: center; border-bottom: 6px solid var(--accent); }
-        h1 { font-size: 2.8rem; font-weight: 900; margin: 0; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .version { font-size: 0.75rem; color: #a0aec0; letter-spacing: 3px; display: block; margin-bottom: 25px; }
-        .field-group { text-align: right; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; background: #0b1120; border: 1px solid #2d3748; color: white; padding: 14px; border-radius: 12px; font-family: 'Cairo'; box-sizing: border-box; font-size: 1rem; }
-        input:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
-        .main-btn { background: var(--grad); color: #0b1120; border: none; padding: 18px; width: 100%; border-radius: 15px; font-size: 1.25rem; font-weight: 900; cursor: pointer; transition: 0.3s; margin-top: 15px; }
-        .main-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0, 242, 254, 0.4); }
-        .main-btn:disabled { background: #2d3748; opacity: 0.6; cursor: not-allowed; }
-        #status { margin-top: 20px; font-weight: 700; color: #4facfe; min-height: 25px; }
-        .audio-container { margin-top: 30px; display: none; background: #0b1120; padding: 20px; border-radius: 20px; border: 2px dashed var(--accent); }
-        audio { width: 100%; height: 50px; margin-top: 10px; }
-        .footer { margin-top: 30px; font-size: 0.7rem; color: #4a5568; }
+        :root { --accent: #00f2fe; --bg: #0b1120; }
+        body { background-color: var(--bg); color: white; font-family: 'Cairo', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #1a2235; border: 1px solid #2d3748; border-radius: 25px; padding: 40px; width: 90%; max-width: 450px; text-align: center; border-bottom: 6px solid var(--accent); }
+        h1 { font-size: 2.5rem; margin: 0; background: linear-gradient(135deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .field { text-align: right; margin-bottom: 20px; }
+        label { color: var(--accent); font-weight: 700; }
+        input, select, textarea { width: 100%; background: #0b1120; border: 1px solid #2d3748; color: white; padding: 12px; border-radius: 12px; margin-top: 8px; }
+        .btn { background: linear-gradient(135deg, #00f2fe, #4facfe); color: #0b1120; border: none; padding: 18px; width: 100%; border-radius: 15px; font-size: 1.2rem; font-weight: 900; cursor: pointer; margin-top: 15px; }
+        #status { margin-top: 20px; color: #4facfe; font-weight: bold; }
+        .audio-box { margin-top: 25px; display: none; padding: 15px; border: 2px dashed var(--accent); border-radius: 20px; }
+        audio { width: 100%; }
     </style>
 </head>
 <body>
 
-<div class="app-card">
+<div class="card">
     <h1>KARIM TLM</h1>
-    <span class="version">AI VOICE CLONE SYSTEM</span>
+    <p style="color: #a0aec0; font-size: 0.8rem;">ELITE AI VOICE SYSTEM</p>
 
-    <div class="field-group">
-        <label>🎙️ 1. ارفع عينة الصوت (Speaker):</label>
-        <input type="file" id="speakerInput" accept="audio/*">
+    <div class="field">
+        <label>🎙️ 1. ارفع عينة الصوت:</label>
+        <input type="file" id="audioFile" accept="audio/*">
     </div>
 
-    <div class="field-group">
-        <label>📝 2. النص المراد نطقة بصوتك:</label>
-        <textarea id="textInput" rows="3" placeholder="أهلاً بك، معك كريم تلمسان..."></textarea>
+    <div class="field">
+        <label>📝 2. النص المراد نطقة:</label>
+        <textarea id="textContent" rows="3" placeholder="أكتب هنا..."></textarea>
     </div>
 
-    <div class="field-group">
-        <label>🌐 3. لغة النطق:</label>
-        <select id="langInput">
+    <div class="field">
+        <label>🌐 3. اللغة:</label>
+        <select id="lang">
             <option value="ar">العربية (Arabic)</option>
-            <option value="en">الإنجليزية (English)</option>
-            <option value="fr">الفرنسية (French)</option>
-            <option value="tr">التركية (Turkish)</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
         </select>
     </div>
 
-    <button id="runBtn" class="main-btn">توليد الصوت الآن 🚀</button>
-    
+    <button id="submitBtn" class="btn">توليد الصوت الآن 🚀</button>
     <div id="status">جاهز للاستخدام</div>
 
-    <div class="audio-container" id="audioBox">
-        <label style="text-align:center; display:block;">🎧 النتيجة النهائية جاهزة:</label>
-        <audio id="audioPlayer" controls></audio>
+    <div class="audio-box" id="audioBox">
+        <audio id="player" controls></audio>
     </div>
-
-    <div class="footer">تطوير كريم تلمسان © 2026 | الإصدار 14.1</div>
 </div>
 
 <script type="module">
     import { client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 
-    const runBtn = document.getElementById('runBtn');
+    const btn = document.getElementById('submitBtn');
     const status = document.getElementById('status');
     const audioBox = document.getElementById('audioBox');
-    const audioPlayer = document.getElementById('audioPlayer');
 
-    // معلومات السيرفر والمفتاح الجديد
-    const SPACE_ID = "karim-treize-13/xtts-voice-cloning";
-    const HF_TOKEN = "Hf_DnWYMJaPIQjbhCXedLRmwqmMLeTgPNCRmT"; // هذا هو مفتاحك الجديد
+    // ضع مفتاحك الجديد هنا بدلاً من النجوم
+    const HF_TOKEN = "Hf_DnWYMJaPIQjbhCXedLRmwqmMLeTgPNCRmT"; 
 
-    runBtn.onclick = async () => {
-        const file = document.getElementById('speakerInput').files[0];
-        const text = document.getElementById('textInput').value;
-        const lang = document.getElementById('langInput').value;
+    btn.onclick = async () => {
+        const file = document.getElementById('audioFile').files[0];
+        const text = document.getElementById('textContent').value;
+        const lang = document.getElementById('lang').value;
 
-        if (!file || !text) return alert("يرجى رفع ملف الصوت وكتابة النص!");
+        if (!file || !text) return alert("أكمل البيانات!");
 
-        runBtn.disabled = true;
-        status.innerText = "⏳ جاري استنساخ الصوت... انتظر قليلاً";
-        audioBox.style.display = "none";
+        btn.disabled = true;
+        status.innerText = "⏳ جاري المعالجة... قد تستغرق دقيقة";
 
         try {
-            // الاتصال الرسمي بسيرفر Hugging Face
-            const app = await client(SPACE_ID, { hf_token: HF_TOKEN });
-            const result = await app.predict("/predict", [
-                text, 
-                lang, 
-                file, // ملف الصوت
-                file, // ملف المرجع
-                true  // تفعيل الـ API
-            ]);
+            const app = await client("karim-treize-13/xtts-voice-cloning", { hf_token: HF_TOKEN });
+            const result = await app.predict("/predict", [text, lang, file, file, true]);
 
-            if (result.data && result.data[0]) {
-                audioPlayer.src = result.data[0].url;
-                audioBox.style.display = "block";
-                status.innerText = "✅ نجح الاستنساخ يا كريم Tlm!";
-            }
-        } catch (error) {
-            console.error(error);
-            status.innerText = "❌ حدث خطأ.. تأكد أن السيرفر (Running) باللون الأخضر.";
-        } finally {
-            runBtn.disabled = false;
-        }
+            document.getElementById('player').src = result.data[0].url;
+            audioBox.style.display = "block";
+            status.innerText = "✅ نجح الاستنساخ!";
+        } catch (e) {
+            status.innerText = "❌ السيرفر لا يستجيب، تأكد أنه Running في Hugging Face";
+        } finally { btn.disabled = false; }
     };
 </script>
-
 </body>
 </html>
