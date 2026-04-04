@@ -3,236 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karim Tlm | الاستوديو الصوتي الذكي</title>
+    <title>Karim Tlm | Professional Voice Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --dark-bg: #050505; --card-bg: #111111; }
+        :root { --main-bg: #f4f7f6; --primary: #008080; --gold: #D4AF37; }
+        body { background: var(--main-bg); font-family: 'Tajawal', sans-serif; margin: 0; padding: 20px; color: #333; }
+        .studio-container { max-width: 500px; margin: auto; background: #fff; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { text-align: center; color: var(--primary); font-weight: bold; font-size: 22px; margin-bottom: 20px; }
         
-        body {
-            background-color: var(--dark-bg);
-            color: #ffffff;
-            font-family: 'Tajawal', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+        .upload-section { border: 2px dashed var(--primary); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 20px; background: #f9ffff; }
+        .section-title { font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        
+        textarea { width: 100%; border-radius: 12px; border: 1px solid #ddd; padding: 15px; font-family: 'Tajawal'; font-size: 16px; box-sizing: border-box; }
+        
+        .control-group { margin-top: 20px; }
+        .slider-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        input[type="range"] { flex: 1; margin: 0 10px; accent-color: var(--primary); }
 
-        /* الهيدر الاحترافي */
-        header {
-            width: 100%;
-            padding: 20px 0;
-            text-align: center;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            background: rgba(17, 17, 17, 0.8);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* الحاوية الرئيسية */
-        .main-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-        }
-
-        .studio-card {
-            background: var(--card-bg);
-            width: 100%;
-            max-width: 600px;
-            border-radius: 30px;
-            padding: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-        }
-
-        .label {
-            display: block;
-            margin-bottom: 10px;
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 20px;
-            color: white;
-            font-size: 18px;
-            font-family: 'Tajawal';
-            resize: none;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        textarea:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        select {
-            width: 100%;
-            padding: 15px;
-            background: #222;
-            color: white;
-            border: 1px solid #444;
-            border-radius: 12px;
-            font-family: 'Tajawal';
-            cursor: pointer;
-        }
-
-        .btn-generate {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(45deg, #D4AF37, #F1C40F);
-            color: black;
-            border: none;
-            border-radius: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.4s;
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-generate:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4); }
-
-        /* منطقة الصوت */
-        .audio-result {
-            margin-top: 30px;
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 15px;
-            display: none;
-        }
-
-        audio { width: 100%; filter: invert(100%); }
-
-        footer {
-            padding: 20px;
-            color: #555;
-            font-size: 12px;
-        }
-
-        /* تأثير التحميل */
-        .loader {
-            display: none;
-            margin: 20px auto;
-            border: 3px solid #333;
-            border-top: 3px solid var(--gold);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .btn-generate { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-generate:hover { background: #006666; }
+        
+        .result-box { margin-top: 20px; background: #eaffea; border: 1px solid #2ecc71; border-radius: 12px; padding: 15px; display: none; }
+        audio { width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-text">Karim Tlm | Voice Studio</div>
-</header>
+<div class="studio-container">
+    <div class="header">🎙️ استنساخ الصوت - Karim Tlm</div>
+    
+    <div class="upload-section">
+        <div class="section-title">📂 الملف المرجعي</div>
+        <input type="file" id="audioFile" style="display:none" onchange="updateFileName()">
+        <button onclick="document.getElementById('audioFile').click()" style="background:none; border: 1px solid var(--primary); padding: 8px 15px; border-radius: 8px; cursor: pointer;">رفع ملف صوتي 📤</button>
+        <p id="fileName" style="font-size: 12px; color: #888; margin-top: 10px;">لا يوجد ملف مختار</p>
+    </div>
 
-<div class="main-container">
-    <div class="studio-card">
-        <span class="label">النص المراد تحويله:</span>
-        <textarea id="textInput" placeholder="أدخل النص هنا..."></textarea>
-
-        <div class="options-grid">
-            <div>
-                <span class="label">اختر جودة الصوت:</span>
-                <select id="modelSelect">
-                    <option value="facebook/mms-tts-ara">نموذج الاستوديو (عربي)</option>
-                    <option value="microsoft/speecht5_tts">نموذج ناعم (تجريبي)</option>
-                </select>
-            </div>
+    <div class="section-title">📝 النص المراد قراءته</div>
+    <textarea id="txt" rows="4" placeholder="مرحبا بكم يا اصدقاء في عالمي الخاص..."></textarea>
+    
+    <div class="control-group">
+        <div class="slider-container">
+            <span>السرعة</span>
+            <input type="range" min="0.5" max="2" step="0.1" value="1.2">
+            <span id="speedVal">1.2x</span>
         </div>
-
-        <button class="btn-generate" onclick="generateVoice()" id="mainBtn">
-            <span>توليد الصوت الآن</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-        </button>
-
-        <div class="loader" id="loader"></div>
-
-        <div class="audio-result" id="audioSection">
-            <span class="label">الصوت الجاهز:</span>
-            <audio id="audioPlayer" controls></audio>
-            <div style="margin-top: 10px; font-size: 12px; color: var(--gold);">جاهز للتحميل والاستخدام في المونتاج ✅</div>
+        <div class="slider-container">
+            <span>النبرة</span>
+            <input type="range" min="0.5" max="1.5" step="0.1" value="1.1">
+            <span id="pitchVal">1.1</span>
         </div>
+    </div>
+
+    <button class="btn-generate" onclick="generate()">توليد الصوت 🔊</button>
+
+    <div class="result-box" id="res">
+        <div style="color: #27ae60; font-weight: bold;">تم توليد الصوت بنجاح ✅</div>
+        <audio id="player" controls></audio>
+        <button style="margin-top:10px; width:100%; padding:10px; background: #eee; border:none; border-radius:8px; cursor:pointer;">تحميل الصوت 📥</button>
     </div>
 </div>
 
-<footer>
-    © 2026 جميع الحقوق محفوظة لـ Karim Tlm | مدعوم بتقنيات الذكاء الاصطناعي
-</footer>
-
 <script>
-    async function generateVoice() {
-        const text = document.getElementById('textInput').value;
-        const model = document.getElementById('modelSelect').value;
-        const btn = document.getElementById('mainBtn');
-        const loader = document.getElementById('loader');
-        const audioSection = document.getElementById('audioSection');
-        const player = document.getElementById('audioPlayer');
+    function updateFileName() {
+        const file = document.getElementById('audioFile').files[0];
+        document.getElementById('fileName').innerText = file ? file.name : "لا يوجد ملف مختار";
+    }
 
-        if (!text) return alert("من فضلك اكتب النص أولاً");
+    async function generate() {
+        const resBox = document.getElementById('res');
+        const btn = document.querySelector('.btn-generate');
+        const text = document.getElementById('txt').value;
+        const player = document.getElementById('player');
 
-        btn.style.display = "none";
-        loader.style.display = "block";
-        audioSection.style.display = "none";
+        if (!text) return alert("أدخل النص أولاً");
 
+        btn.innerText = "جاري المعالجة... ⏳";
+        btn.disabled = true;
+
+        // الربط بالـ API الخاص بك
         try {
-            const response = await fetch(
-                `https://api-inference.huggingface.co/models/${model}`,
-                {
-                    headers: { 
-                        Authorization: "Bearer Hf_FfsSfhvLpIfNpxRLImShHIznqLewqPqNkn",
-                        "Content-Type": "application/json" 
-                    },
-                    method: "POST",
-                    body: JSON.stringify({ inputs: text }),
-                }
-            );
+            const response = await fetch("https://api-inference.huggingface.co/models/facebook/mms-tts-ara", {
+                headers: { Authorization: "Bearer Hf_FfsSfhvLpIfNpxRLImShHIznqLewqPqNkn" },
+                method: "POST",
+                body: JSON.stringify({ inputs: text }),
+            });
 
-            if (!response.ok) throw new Error("السيرفر قيد التشغيل حالياً، يرجى الانتظار ثواني وإعادة المحاولة");
+            if (!response.ok) throw new Error();
 
             const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            player.src = url;
-            audioSection.style.display = "block";
+            player.src = window.URL.createObjectURL(blob);
+            resBox.style.display = "block";
             player.play();
-        } catch (error) {
-            alert(error.message);
+        } catch (e) {
+            alert("حدث خطأ في الاتصال بالسيرفر");
         } finally {
-            btn.style.display = "flex";
-            loader.style.display = "none";
+            btn.innerText = "توليد الصوت 🔊";
+            btn.disabled = false;
         }
     }
 </script>
